@@ -1,0 +1,13 @@
+
+VCFtools - 0.1.17
+(C) Adam Auton and Anthony Marcketta 2009
+
+Parameters as interpreted:
+	--vcf [stdin]
+	--singletons
+	--stdout
+
+After filtering, kept 503 out of 503 Individuals
+Outputting Singleton Locations
+After filtering, kept 56975 out of a possible 56975 Sites
+Run Time = 2216.00 seconds

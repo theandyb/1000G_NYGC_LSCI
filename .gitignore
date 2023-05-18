@@ -1,0 +1,6 @@
+data/*
+*.Rproj
+output/*
+.Rhistory
+src/slurm/*
+.Rproj.user/*

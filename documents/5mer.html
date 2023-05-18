@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Andy Beck">
+
+<title>5-Mer Models</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="5mer_files/libs/clipboard/clipboard.min.js"></script>
+<script src="5mer_files/libs/quarto-html/quarto.js"></script>
+<script src="5mer_files/libs/quarto-html/popper.min.js"></script>
+<script src="5mer_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="5mer_files/libs/quarto-html/anchor.min.js"></script>
+<link href="5mer_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="5mer_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="5mer_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="5mer_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="5mer_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+<link href="5mer_files/libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="5mer_files/libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">5-Mer Models</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Andy Beck </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this document we will take an in-depth look into modeling the influence of local sequence context within the +/- 2 bp window centered at a site of interest. In particular, we will be building models which include more than 1 or 2 positions and more thoroughly assess the influence of local sequence context.</p>
+<p>In order to proceed, we will:</p>
+<ol type="1">
+<li>Import the counts of 5-mers for both the singletons and controls</li>
+<li>Sequentially build models from simple to more complex</li>
+</ol>
+</section>
+<section id="loading-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-the-data">Loading the data</h2>
+<p>For both the singletons and controls, 21-mer motifs are available as the fourth column in subtype-specific csv files.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>load_singletons <span class="ot">&lt;-</span> <span class="cf">function</span>(pop, subtype){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  base_dir <span class="ot">&lt;-</span> <span class="st">"/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  f_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_dir, pop, <span class="st">"/motifs/"</span>, subtype, <span class="st">".csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  awk_tmpl <span class="ot">&lt;-</span> <span class="st">"awk -F, '{count[substr($4,9,5)]++}END{for(key in count)print(key</span><span class="sc">\"\\</span><span class="st">t</span><span class="sc">\"</span><span class="st">count[key])}' "</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  awk_cmd <span class="ot">&lt;-</span> <span class="fu">paste0</span>(awk_tmpl, f_name)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="fu">pipe</span>(awk_cmd), <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"motif"</span>, <span class="st">"singletons"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(motif, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"p1"</span>, <span class="st">"p2"</span>, <span class="st">"p3"</span>, <span class="st">"p4"</span>, <span class="st">"p5"</span>), <span class="at">sep=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>load_controls <span class="ot">&lt;-</span> <span class="cf">function</span>(pop, subtype){</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  base_dir <span class="ot">&lt;-</span> <span class="st">"/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  f_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_dir, pop, <span class="st">"/motifs/"</span>, subtype, <span class="st">".csv"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  awk_tmpl <span class="ot">&lt;-</span> <span class="st">"awk -F, '{count[substr($4,9,5)]++}END{for(key in count)print(key</span><span class="sc">\"\\</span><span class="st">t</span><span class="sc">\"</span><span class="st">count[key])}' "</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  awk_cmd <span class="ot">&lt;-</span> <span class="fu">paste0</span>(awk_tmpl, f_name)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> vroom<span class="sc">::</span><span class="fu">vroom</span>(<span class="fu">pipe</span>(awk_cmd), <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"motif"</span>, <span class="st">"controls"</span>), <span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(motif, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"p1"</span>, <span class="st">"p2"</span>, <span class="st">"p3"</span>, <span class="st">"p4"</span>, <span class="st">"p5"</span>), <span class="at">sep=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>load_data <span class="ot">&lt;-</span> <span class="cf">function</span>(pop, subtype){</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">load_singletons</span>(pop, subtype) <span class="sc">%&gt;%</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">full_join</span>(<span class="fu">load_controls</span>(pop, subtype), <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"p1"</span>, <span class="st">"p2"</span>, <span class="st">"p3"</span>, <span class="st">"p4"</span>, <span class="st">"p5"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">!</span><span class="fu">starts_with</span>(<span class="st">"p"</span>), <span class="at">names_to =</span> <span class="st">"status"</span>, <span class="at">values_to =</span> <span class="st">"n"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fitting-models" class="level2">
+<h2 class="anchored" data-anchor-id="fitting-models">Fitting Models</h2>
+<p>For our first foray, let’s fit models for the A &gt; G subtype using the data from all 1KGP populations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">load_data</span>(<span class="st">"ALL"</span>, <span class="st">"AT_GC"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["p1"],"name":[1],"type":["chr"],"align":["left"]},{"label":["p2"],"name":[2],"type":["chr"],"align":["left"]},{"label":["p3"],"name":[3],"type":["chr"],"align":["left"]},{"label":["p4"],"name":[4],"type":["chr"],"align":["left"]},{"label":["p5"],"name":[5],"type":["chr"],"align":["left"]},{"label":["status"],"name":[6],"type":["chr"],"align":["left"]},{"label":["n"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"T","2":"G","3":"A","4":"G","5":"T","6":"singletons","7":"33803"},{"1":"T","2":"G","3":"A","4":"G","5":"T","6":"controls","7":"169015"},{"1":"C","2":"T","3":"A","4":"T","5":"G","6":"singletons","7":"164953"},{"1":"C","2":"T","3":"A","4":"T","5":"G","6":"controls","7":"824765"},{"1":"C","2":"T","3":"A","4":"C","5":"C","6":"singletons","7":"37286"},{"1":"C","2":"T","3":"A","4":"C","5":"C","6":"controls","7":"186430"},{"1":"A","2":"C","3":"A","4":"A","5":"T","6":"singletons","7":"54546"},{"1":"A","2":"C","3":"A","4":"A","5":"T","6":"controls","7":"272730"},{"1":"A","2":"C","3":"A","4":"G","5":"A","6":"singletons","7":"79913"},{"1":"A","2":"C","3":"A","4":"G","5":"A","6":"controls","7":"399565"},{"1":"C","2":"T","3":"A","4":"C","5":"G","6":"singletons","7":"8455"},{"1":"C","2":"T","3":"A","4":"C","5":"G","6":"controls","7":"42275"},{"1":"G","2":"A","3":"A","4":"A","5":"T","6":"singletons","7":"34634"},{"1":"G","2":"A","3":"A","4":"A","5":"T","6":"controls","7":"173170"},{"1":"A","2":"C","3":"A","4":"T","5":"T","6":"singletons","7":"156438"},{"1":"A","2":"C","3":"A","4":"T","5":"T","6":"controls","7":"782190"},{"1":"A","2":"C","3":"A","4":"G","5":"C","6":"singletons","7":"40096"},{"1":"A","2":"C","3":"A","4":"G","5":"C","6":"controls","7":"200480"},{"1":"G","2":"A","3":"A","4":"G","5":"A","6":"singletons","7":"55412"},{"1":"G","2":"A","3":"A","4":"G","5":"A","6":"controls","7":"277060"},{"1":"C","2":"C","3":"A","4":"A","5":"A","6":"singletons","7":"70535"},{"1":"C","2":"C","3":"A","4":"A","5":"A","6":"controls","7":"352675"},{"1":"G","2":"A","3":"A","4":"T","5":"T","6":"singletons","7":"52398"},{"1":"G","2":"A","3":"A","4":"T","5":"T","6":"controls","7":"261990"},{"1":"A","2":"T","3":"A","4":"G","5":"T","6":"singletons","7":"49639"},{"1":"A","2":"T","3":"A","4":"G","5":"T","6":"controls","7":"248195"},{"1":"C","2":"C","3":"A","4":"A","5":"C","6":"singletons","7":"22586"},{"1":"C","2":"C","3":"A","4":"A","5":"C","6":"controls","7":"112930"},{"1":"A","2":"C","3":"A","4":"C","5":"T","6":"singletons","7":"72574"},{"1":"A","2":"C","3":"A","4":"C","5":"T","6":"controls","7":"362870"},{"1":"G","2":"A","3":"A","4":"G","5":"C","6":"singletons","7":"29194"},{"1":"G","2":"A","3":"A","4":"G","5":"C","6":"controls","7":"145970"},{"1":"A","2":"A","3":"A","4":"A","5":"A","6":"singletons","7":"207272"},{"1":"A","2":"A","3":"A","4":"A","5":"A","6":"controls","7":"1036360"},{"1":"C","2":"C","3":"A","4":"T","5":"A","6":"singletons","7":"118695"},{"1":"C","2":"C","3":"A","4":"T","5":"A","6":"controls","7":"593475"},{"1":"A","2":"C","3":"A","4":"G","5":"G","6":"singletons","7":"68258"},{"1":"A","2":"C","3":"A","4":"G","5":"G","6":"controls","7":"341290"},{"1":"C","2":"T","3":"A","4":"A","5":"T","6":"singletons","7":"53056"},{"1":"C","2":"T","3":"A","4":"A","5":"T","6":"controls","7":"265280"},{"1":"A","2":"A","3":"A","4":"A","5":"C","6":"singletons","7":"36566"},{"1":"A","2":"A","3":"A","4":"A","5":"C","6":"controls","7":"182830"},{"1":"G","2":"A","3":"A","4":"C","5":"T","6":"singletons","7":"44354"},{"1":"G","2":"A","3":"A","4":"C","5":"T","6":"controls","7":"221770"},{"1":"C","2":"C","3":"A","4":"T","5":"C","6":"singletons","7":"98918"},{"1":"C","2":"C","3":"A","4":"T","5":"C","6":"controls","7":"494590"},{"1":"A","2":"A","3":"A","4":"T","5":"A","6":"singletons","7":"171087"},{"1":"A","2":"A","3":"A","4":"T","5":"A","6":"controls","7":"855435"},{"1":"G","2":"A","3":"A","4":"G","5":"G","6":"singletons","7":"35016"},{"1":"G","2":"A","3":"A","4":"G","5":"G","6":"controls","7":"175080"},{"1":"C","2":"C","3":"A","4":"A","5":"G","6":"singletons","7":"44780"},{"1":"C","2":"C","3":"A","4":"A","5":"G","6":"controls","7":"223900"},{"1":"C","2":"T","3":"A","4":"G","5":"A","6":"singletons","7":"58109"},{"1":"C","2":"T","3":"A","4":"G","5":"A","6":"controls","7":"290545"},{"1":"C","2":"T","3":"A","4":"T","5":"T","6":"singletons","7":"192803"},{"1":"C","2":"T","3":"A","4":"T","5":"T","6":"controls","7":"964015"},{"1":"A","2":"A","3":"A","4":"T","5":"C","6":"singletons","7":"66025"},{"1":"A","2":"A","3":"A","4":"T","5":"C","6":"controls","7":"330125"},{"1":"C","2":"C","3":"A","4":"C","5":"A","6":"singletons","7":"61958"},{"1":"C","2":"C","3":"A","4":"C","5":"A","6":"controls","7":"309790"},{"1":"T","2":"T","3":"A","4":"A","5":"A","6":"singletons","7":"87285"},{"1":"T","2":"T","3":"A","4":"A","5":"A","6":"controls","7":"436425"},{"1":"C","2":"T","3":"A","4":"G","5":"C","6":"singletons","7":"24410"},{"1":"C","2":"T","3":"A","4":"G","5":"C","6":"controls","7":"122050"},{"1":"A","2":"A","3":"A","4":"A","5":"G","6":"singletons","7":"61167"},{"1":"A","2":"A","3":"A","4":"A","5":"G","6":"controls","7":"305835"},{"1":"T","2":"T","3":"A","4":"A","5":"C","6":"singletons","7":"19818"},{"1":"T","2":"T","3":"A","4":"A","5":"C","6":"controls","7":"99090"},{"1":"C","2":"C","3":"A","4":"C","5":"C","6":"singletons","7":"54686"},{"1":"C","2":"C","3":"A","4":"C","5":"C","6":"controls","7":"273430"},{"1":"A","2":"A","3":"A","4":"C","5":"A","6":"singletons","7":"101036"},{"1":"A","2":"A","3":"A","4":"C","5":"A","6":"controls","7":"505180"},{"1":"C","2":"C","3":"A","4":"T","5":"G","6":"singletons","7":"146161"},{"1":"C","2":"C","3":"A","4":"T","5":"G","6":"controls","7":"730805"},{"1":"T","2":"T","3":"A","4":"T","5":"A","6":"singletons","7":"151941"},{"1":"T","2":"T","3":"A","4":"T","5":"A","6":"controls","7":"759705"},{"1":"A","2":"A","3":"A","4":"C","5":"C","6":"singletons","7":"46294"},{"1":"A","2":"A","3":"A","4":"C","5":"C","6":"controls","7":"231470"},{"1":"C","2":"T","3":"A","4":"C","5":"T","6":"singletons","7":"80700"},{"1":"C","2":"T","3":"A","4":"C","5":"T","6":"controls","7":"403500"},{"1":"A","2":"A","3":"A","4":"T","5":"G","6":"singletons","7":"121104"},{"1":"A","2":"A","3":"A","4":"T","5":"G","6":"controls","7":"605520"},{"1":"T","2":"T","3":"A","4":"T","5":"C","6":"singletons","7":"64296"},{"1":"T","2":"T","3":"A","4":"T","5":"C","6":"controls","7":"321480"},{"1":"C","2":"T","3":"A","4":"G","5":"G","6":"singletons","7":"37273"},{"1":"C","2":"T","3":"A","4":"G","5":"G","6":"controls","7":"186365"},{"1":"G","2":"G","3":"A","4":"A","5":"A","6":"singletons","7":"83733"},{"1":"G","2":"G","3":"A","4":"A","5":"A","6":"controls","7":"418665"},{"1":"C","2":"C","3":"A","4":"C","5":"G","6":"singletons","7":"11670"},{"1":"C","2":"C","3":"A","4":"C","5":"G","6":"controls","7":"58350"},{"1":"T","2":"T","3":"A","4":"A","5":"G","6":"singletons","7":"30106"},{"1":"T","2":"T","3":"A","4":"A","5":"G","6":"controls","7":"150530"},{"1":"G","2":"G","3":"A","4":"A","5":"C","6":"singletons","7":"16452"},{"1":"G","2":"G","3":"A","4":"A","5":"C","6":"controls","7":"82260"},{"1":"T","2":"T","3":"A","4":"C","5":"A","6":"singletons","7":"63601"},{"1":"T","2":"T","3":"A","4":"C","5":"A","6":"controls","7":"318005"},{"1":"G","2":"G","3":"A","4":"T","5":"A","6":"singletons","7":"42596"},{"1":"G","2":"G","3":"A","4":"T","5":"A","6":"controls","7":"212980"},{"1":"A","2":"A","3":"A","4":"C","5":"G","6":"singletons","7":"7512"},{"1":"A","2":"A","3":"A","4":"C","5":"G","6":"controls","7":"37560"},{"1":"A","2":"C","3":"A","4":"G","5":"T","6":"singletons","7":"76405"},{"1":"A","2":"C","3":"A","4":"G","5":"T","6":"controls","7":"382025"},{"1":"T","2":"T","3":"A","4":"T","5":"G","6":"singletons","7":"78121"},{"1":"T","2":"T","3":"A","4":"T","5":"G","6":"controls","7":"390605"},{"1":"T","2":"T","3":"A","4":"C","5":"C","6":"singletons","7":"29995"},{"1":"T","2":"T","3":"A","4":"C","5":"C","6":"controls","7":"149975"},{"1":"G","2":"G","3":"A","4":"T","5":"C","6":"singletons","7":"22052"},{"1":"G","2":"G","3":"A","4":"T","5":"C","6":"controls","7":"110260"},{"1":"G","2":"G","3":"A","4":"A","5":"G","6":"singletons","7":"33177"},{"1":"G","2":"G","3":"A","4":"A","5":"G","6":"controls","7":"165885"},{"1":"G","2":"A","3":"A","4":"G","5":"T","6":"singletons","7":"37517"},{"1":"G","2":"A","3":"A","4":"G","5":"T","6":"controls","7":"187585"},{"1":"C","2":"C","3":"A","4":"A","5":"T","6":"singletons","7":"33698"},{"1":"C","2":"C","3":"A","4":"A","5":"T","6":"controls","7":"168490"},{"1":"G","2":"G","3":"A","4":"C","5":"A","6":"singletons","7":"43618"},{"1":"G","2":"G","3":"A","4":"C","5":"A","6":"controls","7":"218090"},{"1":"T","2":"T","3":"A","4":"C","5":"G","6":"singletons","7":"4241"},{"1":"T","2":"T","3":"A","4":"C","5":"G","6":"controls","7":"21205"},{"1":"G","2":"G","3":"A","4":"C","5":"C","6":"singletons","7":"18489"},{"1":"G","2":"G","3":"A","4":"C","5":"C","6":"controls","7":"92445"},{"1":"G","2":"G","3":"A","4":"T","5":"G","6":"singletons","7":"43948"},{"1":"G","2":"G","3":"A","4":"T","5":"G","6":"controls","7":"219740"},{"1":"C","2":"C","3":"A","4":"G","5":"A","6":"singletons","7":"61191"},{"1":"C","2":"C","3":"A","4":"G","5":"A","6":"controls","7":"305955"},{"1":"A","2":"A","3":"A","4":"A","5":"T","6":"singletons","7":"70019"},{"1":"A","2":"A","3":"A","4":"A","5":"T","6":"controls","7":"350095"},{"1":"T","2":"C","3":"A","4":"A","5":"A","6":"singletons","7":"56475"},{"1":"T","2":"C","3":"A","4":"A","5":"A","6":"controls","7":"282375"},{"1":"C","2":"C","3":"A","4":"T","5":"T","6":"singletons","7":"125329"},{"1":"C","2":"C","3":"A","4":"T","5":"T","6":"controls","7":"626645"},{"1":"C","2":"C","3":"A","4":"G","5":"C","6":"singletons","7":"59649"},{"1":"C","2":"C","3":"A","4":"G","5":"C","6":"controls","7":"298245"},{"1":"A","2":"A","3":"A","4":"G","5":"A","6":"singletons","7":"101635"},{"1":"A","2":"A","3":"A","4":"G","5":"A","6":"controls","7":"508175"},{"1":"T","2":"C","3":"A","4":"A","5":"C","6":"singletons","7":"20373"},{"1":"T","2":"C","3":"A","4":"A","5":"C","6":"controls","7":"101865"},{"1":"A","2":"A","3":"A","4":"T","5":"T","6":"singletons","7":"111597"},{"1":"A","2":"A","3":"A","4":"T","5":"T","6":"controls","7":"557985"},{"1":"A","2":"A","3":"A","4":"G","5":"C","6":"singletons","7":"38360"},{"1":"A","2":"A","3":"A","4":"G","5":"C","6":"controls","7":"191800"},{"1":"G","2":"G","3":"A","4":"C","5":"G","6":"singletons","7":"5705"},{"1":"G","2":"G","3":"A","4":"C","5":"G","6":"controls","7":"28525"},{"1":"C","2":"T","3":"A","4":"G","5":"T","6":"singletons","7":"38132"},{"1":"C","2":"T","3":"A","4":"G","5":"T","6":"controls","7":"190660"},{"1":"T","2":"C","3":"A","4":"T","5":"A","6":"singletons","7":"113865"},{"1":"T","2":"C","3":"A","4":"T","5":"A","6":"controls","7":"569325"},{"1":"C","2":"C","3":"A","4":"C","5":"T","6":"singletons","7":"67894"},{"1":"C","2":"C","3":"A","4":"C","5":"T","6":"controls","7":"339470"},{"1":"T","2":"T","3":"A","4":"A","5":"T","6":"singletons","7":"44048"},{"1":"T","2":"T","3":"A","4":"A","5":"T","6":"controls","7":"220240"},{"1":"A","2":"R","3":"A","4":"G","5":"T","6":"singletons","7":"1"},{"1":"A","2":"R","3":"A","4":"G","5":"T","6":"controls","7":"5"},{"1":"C","2":"C","3":"A","4":"G","5":"G","6":"singletons","7":"92274"},{"1":"C","2":"C","3":"A","4":"G","5":"G","6":"controls","7":"461370"},{"1":"T","2":"C","3":"A","4":"T","5":"C","6":"singletons","7":"72708"},{"1":"T","2":"C","3":"A","4":"T","5":"C","6":"controls","7":"363540"},{"1":"A","2":"A","3":"A","4":"C","5":"T","6":"singletons","7":"64631"},{"1":"A","2":"A","3":"A","4":"C","5":"T","6":"controls","7":"323155"},{"1":"T","2":"C","3":"A","4":"A","5":"G","6":"singletons","7":"39684"},{"1":"T","2":"C","3":"A","4":"A","5":"G","6":"controls","7":"198420"},{"1":"T","2":"T","3":"A","4":"G","5":"A","6":"singletons","7":"45146"},{"1":"T","2":"T","3":"A","4":"G","5":"A","6":"controls","7":"225730"},{"1":"T","2":"C","3":"A","4":"C","5":"A","6":"singletons","7":"48570"},{"1":"T","2":"C","3":"A","4":"C","5":"A","6":"controls","7":"242850"},{"1":"A","2":"A","3":"A","4":"G","5":"G","6":"singletons","7":"52054"},{"1":"A","2":"A","3":"A","4":"G","5":"G","6":"controls","7":"260270"},{"1":"T","2":"T","3":"A","4":"T","5":"T","6":"singletons","7":"135925"},{"1":"T","2":"T","3":"A","4":"T","5":"T","6":"controls","7":"679625"},{"1":"T","2":"T","3":"A","4":"G","5":"C","6":"singletons","7":"29187"},{"1":"T","2":"T","3":"A","4":"G","5":"C","6":"controls","7":"145935"},{"1":"G","2":"G","3":"A","4":"A","5":"T","6":"singletons","7":"25555"},{"1":"G","2":"G","3":"A","4":"A","5":"T","6":"controls","7":"127775"},{"1":"T","2":"C","3":"A","4":"C","5":"C","6":"singletons","7":"39735"},{"1":"T","2":"C","3":"A","4":"C","5":"C","6":"controls","7":"198675"},{"1":"T","2":"C","3":"A","4":"T","5":"G","6":"singletons","7":"107058"},{"1":"T","2":"C","3":"A","4":"T","5":"G","6":"controls","7":"535290"},{"1":"T","2":"T","3":"A","4":"C","5":"T","6":"singletons","7":"49878"},{"1":"T","2":"T","3":"A","4":"C","5":"T","6":"controls","7":"249390"},{"1":"G","2":"G","3":"A","4":"G","5":"A","6":"singletons","7":"41811"},{"1":"G","2":"G","3":"A","4":"G","5":"A","6":"controls","7":"209055"},{"1":"G","2":"G","3":"A","4":"T","5":"T","6":"singletons","7":"37828"},{"1":"G","2":"G","3":"A","4":"T","5":"T","6":"controls","7":"189140"},{"1":"T","2":"T","3":"A","4":"G","5":"G","6":"singletons","7":"29093"},{"1":"T","2":"T","3":"A","4":"G","5":"G","6":"controls","7":"145465"},{"1":"T","2":"C","3":"A","4":"C","5":"G","6":"singletons","7":"8800"},{"1":"T","2":"C","3":"A","4":"C","5":"G","6":"controls","7":"44000"},{"1":"A","2":"G","3":"A","4":"A","5":"A","6":"singletons","7":"116100"},{"1":"A","2":"G","3":"A","4":"A","5":"A","6":"controls","7":"580500"},{"1":"G","2":"G","3":"A","4":"G","5":"C","6":"singletons","7":"23275"},{"1":"G","2":"G","3":"A","4":"G","5":"C","6":"controls","7":"116375"},{"1":"A","2":"G","3":"A","4":"A","5":"C","6":"singletons","7":"26756"},{"1":"A","2":"G","3":"A","4":"A","5":"C","6":"controls","7":"133780"},{"1":"G","2":"G","3":"A","4":"C","5":"T","6":"singletons","7":"28801"},{"1":"G","2":"G","3":"A","4":"C","5":"T","6":"controls","7":"144005"},{"1":"A","2":"G","3":"A","4":"T","5":"A","6":"singletons","7":"90827"},{"1":"A","2":"G","3":"A","4":"T","5":"A","6":"controls","7":"454135"},{"1":"G","2":"G","3":"A","4":"G","5":"G","6":"singletons","7":"42942"},{"1":"G","2":"G","3":"A","4":"G","5":"G","6":"controls","7":"214710"},{"1":"A","2":"G","3":"A","4":"T","5":"C","6":"singletons","7":"39873"},{"1":"A","2":"G","3":"A","4":"T","5":"C","6":"controls","7":"199365"},{"1":"C","2":"C","3":"A","4":"G","5":"T","6":"singletons","7":"56676"},{"1":"C","2":"C","3":"A","4":"G","5":"T","6":"controls","7":"283380"},{"1":"T","2":"C","3":"A","4":"A","5":"T","6":"singletons","7":"41704"},{"1":"T","2":"C","3":"A","4":"A","5":"T","6":"controls","7":"208520"},{"1":"A","2":"G","3":"A","4":"A","5":"G","6":"singletons","7":"47061"},{"1":"A","2":"G","3":"A","4":"A","5":"G","6":"controls","7":"235305"},{"1":"A","2":"A","3":"A","4":"G","5":"T","6":"singletons","7":"58327"},{"1":"A","2":"A","3":"A","4":"G","5":"T","6":"controls","7":"291635"},{"1":"A","2":"G","3":"A","4":"C","5":"A","6":"singletons","7":"74054"},{"1":"A","2":"G","3":"A","4":"C","5":"A","6":"controls","7":"370270"},{"1":"C","2":"A","3":"A","4":"A","5":"A","6":"singletons","7":"127188"},{"1":"C","2":"A","3":"A","4":"A","5":"A","6":"controls","7":"635940"},{"1":"T","2":"C","3":"A","4":"G","5":"A","6":"singletons","7":"56945"},{"1":"T","2":"C","3":"A","4":"G","5":"A","6":"controls","7":"284725"},{"1":"C","2":"A","3":"A","4":"A","5":"C","6":"singletons","7":"47405"},{"1":"C","2":"A","3":"A","4":"A","5":"C","6":"controls","7":"237025"},{"1":"A","2":"G","3":"A","4":"T","5":"G","6":"singletons","7":"80072"},{"1":"A","2":"G","3":"A","4":"T","5":"G","6":"controls","7":"400360"},{"1":"A","2":"G","3":"A","4":"C","5":"C","6":"singletons","7":"31169"},{"1":"A","2":"G","3":"A","4":"C","5":"C","6":"controls","7":"155845"},{"1":"T","2":"C","3":"A","4":"T","5":"T","6":"singletons","7":"122026"},{"1":"T","2":"C","3":"A","4":"T","5":"T","6":"controls","7":"610130"},{"1":"C","2":"A","3":"A","4":"T","5":"A","6":"singletons","7":"179670"},{"1":"C","2":"A","3":"A","4":"T","5":"A","6":"controls","7":"898350"},{"1":"T","2":"C","3":"A","4":"G","5":"C","6":"singletons","7":"49387"},{"1":"T","2":"C","3":"A","4":"G","5":"C","6":"controls","7":"246935"},{"1":"C","2":"A","3":"A","4":"T","5":"C","6":"singletons","7":"131986"},{"1":"C","2":"A","3":"A","4":"T","5":"C","6":"controls","7":"659930"},{"1":"T","2":"T","3":"A","4":"G","5":"T","6":"singletons","7":"44247"},{"1":"T","2":"T","3":"A","4":"G","5":"T","6":"controls","7":"221235"},{"1":"A","2":"G","3":"A","4":"C","5":"G","6":"singletons","7":"10381"},{"1":"A","2":"G","3":"A","4":"C","5":"G","6":"controls","7":"51905"},{"1":"T","2":"A","3":"A","4":"A","5":"A","6":"singletons","7":"74863"},{"1":"T","2":"A","3":"A","4":"A","5":"A","6":"controls","7":"374315"},{"1":"T","2":"C","3":"A","4":"C","5":"T","6":"singletons","7":"65102"},{"1":"T","2":"C","3":"A","4":"C","5":"T","6":"controls","7":"325510"},{"1":"C","2":"A","3":"A","4":"A","5":"G","6":"singletons","7":"71512"},{"1":"C","2":"A","3":"A","4":"A","5":"G","6":"controls","7":"357560"},{"1":"T","2":"C","3":"A","4":"G","5":"G","6":"singletons","7":"66238"},{"1":"T","2":"C","3":"A","4":"G","5":"G","6":"controls","7":"331190"},{"1":"G","2":"T","3":"A","4":"A","5":"A","6":"singletons","7":"56675"},{"1":"G","2":"T","3":"A","4":"A","5":"A","6":"controls","7":"283375"},{"1":"C","2":"A","3":"A","4":"C","5":"A","6":"singletons","7":"99849"},{"1":"C","2":"A","3":"A","4":"C","5":"A","6":"controls","7":"499245"},{"1":"T","2":"A","3":"A","4":"A","5":"C","6":"singletons","7":"15214"},{"1":"T","2":"A","3":"A","4":"A","5":"C","6":"controls","7":"76070"},{"1":"C","2":"A","3":"A","4":"C","5":"C","6":"singletons","7":"62148"},{"1":"C","2":"A","3":"A","4":"C","5":"C","6":"controls","7":"310740"},{"1":"T","2":"A","3":"A","4":"T","5":"A","6":"singletons","7":"97831"},{"1":"T","2":"A","3":"A","4":"T","5":"A","6":"controls","7":"489155"},{"1":"G","2":"T","3":"A","4":"A","5":"C","6":"singletons","7":"17450"},{"1":"G","2":"T","3":"A","4":"A","5":"C","6":"controls","7":"87250"},{"1":"C","2":"A","3":"A","4":"T","5":"G","6":"singletons","7":"228907"},{"1":"C","2":"A","3":"A","4":"T","5":"G","6":"controls","7":"1144535"},{"1":"G","2":"G","3":"A","4":"G","5":"T","6":"singletons","7":"33825"},{"1":"G","2":"G","3":"A","4":"G","5":"T","6":"controls","7":"169125"},{"1":"G","2":"T","3":"A","4":"T","5":"A","6":"singletons","7":"121671"},{"1":"G","2":"T","3":"A","4":"T","5":"A","6":"controls","7":"608355"},{"1":"A","2":"C","3":"A","4":"W","5":"A","6":"singletons","7":"1"},{"1":"A","2":"C","3":"A","4":"W","5":"A","6":"controls","7":"5"},{"1":"T","2":"A","3":"A","4":"T","5":"C","6":"singletons","7":"41926"},{"1":"T","2":"A","3":"A","4":"T","5":"C","6":"controls","7":"209630"},{"1":"A","2":"G","3":"A","4":"A","5":"T","6":"singletons","7":"43197"},{"1":"A","2":"G","3":"A","4":"A","5":"T","6":"controls","7":"215985"},{"1":"G","2":"T","3":"A","4":"T","5":"C","6":"singletons","7":"51561"},{"1":"G","2":"T","3":"A","4":"T","5":"C","6":"controls","7":"257805"},{"1":"T","2":"A","3":"A","4":"A","5":"G","6":"singletons","7":"26546"},{"1":"T","2":"A","3":"A","4":"A","5":"G","6":"controls","7":"132730"},{"1":"G","2":"T","3":"A","4":"A","5":"G","6":"singletons","7":"28644"},{"1":"G","2":"T","3":"A","4":"A","5":"G","6":"controls","7":"143220"},{"1":"C","2":"A","3":"A","4":"C","5":"G","6":"singletons","7":"14909"},{"1":"C","2":"A","3":"A","4":"C","5":"G","6":"controls","7":"74545"},{"1":"T","2":"A","3":"A","4":"C","5":"A","6":"singletons","7":"48723"},{"1":"T","2":"A","3":"A","4":"C","5":"A","6":"controls","7":"243615"},{"1":"G","2":"T","3":"A","4":"C","5":"A","6":"singletons","7":"42281"},{"1":"G","2":"T","3":"A","4":"C","5":"A","6":"controls","7":"211405"},{"1":"A","2":"G","3":"A","4":"G","5":"A","6":"singletons","7":"70986"},{"1":"A","2":"G","3":"A","4":"G","5":"A","6":"controls","7":"354930"},{"1":"T","2":"A","3":"A","4":"C","5":"C","6":"singletons","7":"18733"},{"1":"T","2":"A","3":"A","4":"C","5":"C","6":"controls","7":"93665"},{"1":"T","2":"A","3":"A","4":"T","5":"G","6":"singletons","7":"57207"},{"1":"T","2":"A","3":"A","4":"T","5":"G","6":"controls","7":"286035"},{"1":"A","2":"G","3":"A","4":"T","5":"T","6":"singletons","7":"59494"},{"1":"A","2":"G","3":"A","4":"T","5":"T","6":"controls","7":"297470"},{"1":"A","2":"G","3":"A","4":"G","5":"C","6":"singletons","7":"36289"},{"1":"A","2":"G","3":"A","4":"G","5":"C","6":"controls","7":"181445"},{"1":"G","2":"T","3":"A","4":"C","5":"C","6":"singletons","7":"20804"},{"1":"G","2":"T","3":"A","4":"C","5":"C","6":"controls","7":"104020"},{"1":"G","2":"T","3":"A","4":"T","5":"G","6":"singletons","7":"72637"},{"1":"G","2":"T","3":"A","4":"T","5":"G","6":"controls","7":"363185"},{"1":"T","2":"A","3":"A","4":"C","5":"G","6":"singletons","7":"3291"},{"1":"T","2":"A","3":"A","4":"C","5":"G","6":"controls","7":"16455"},{"1":"C","2":"A","3":"A","4":"A","5":"T","6":"singletons","7":"90066"},{"1":"C","2":"A","3":"A","4":"A","5":"T","6":"controls","7":"450330"},{"1":"A","2":"G","3":"A","4":"C","5":"T","6":"singletons","7":"48311"},{"1":"A","2":"G","3":"A","4":"C","5":"T","6":"controls","7":"241555"},{"1":"G","2":"T","3":"A","4":"C","5":"G","6":"singletons","7":"3357"},{"1":"G","2":"T","3":"A","4":"C","5":"G","6":"controls","7":"16785"},{"1":"T","2":"C","3":"A","4":"G","5":"T","6":"singletons","7":"64334"},{"1":"T","2":"C","3":"A","4":"G","5":"T","6":"controls","7":"321670"},{"1":"A","2":"G","3":"A","4":"G","5":"G","6":"singletons","7":"42310"},{"1":"A","2":"G","3":"A","4":"G","5":"G","6":"controls","7":"211550"},{"1":"C","2":"A","3":"A","4":"G","5":"A","6":"singletons","7":"71023"},{"1":"C","2":"A","3":"A","4":"G","5":"A","6":"controls","7":"355115"},{"1":"G","2":"C","3":"A","4":"A","5":"A","6":"singletons","7":"41890"},{"1":"G","2":"C","3":"A","4":"A","5":"A","6":"controls","7":"209450"},{"1":"C","2":"A","3":"A","4":"T","5":"T","6":"singletons","7":"208187"},{"1":"C","2":"A","3":"A","4":"T","5":"T","6":"controls","7":"1040935"},{"1":"C","2":"A","3":"A","4":"G","5":"C","6":"singletons","7":"37980"},{"1":"C","2":"A","3":"A","4":"G","5":"C","6":"controls","7":"189900"},{"1":"G","2":"C","3":"A","4":"A","5":"C","6":"singletons","7":"16297"},{"1":"G","2":"C","3":"A","4":"A","5":"C","6":"controls","7":"81485"},{"1":"T","2":"A","3":"A","4":"A","5":"T","6":"singletons","7":"36936"},{"1":"T","2":"A","3":"A","4":"A","5":"T","6":"controls","7":"184680"},{"1":"G","2":"C","3":"A","4":"T","5":"A","6":"singletons","7":"86791"},{"1":"G","2":"C","3":"A","4":"T","5":"A","6":"controls","7":"433955"},{"1":"C","2":"A","3":"A","4":"C","5":"T","6":"singletons","7":"90901"},{"1":"C","2":"A","3":"A","4":"C","5":"T","6":"controls","7":"454505"},{"1":"G","2":"T","3":"A","4":"A","5":"T","6":"singletons","7":"36842"},{"1":"G","2":"T","3":"A","4":"A","5":"T","6":"controls","7":"184210"},{"1":"G","2":"C","3":"A","4":"T","5":"C","6":"singletons","7":"45005"},{"1":"G","2":"C","3":"A","4":"T","5":"C","6":"controls","7":"225025"},{"1":"C","2":"A","3":"A","4":"G","5":"G","6":"singletons","7":"48441"},{"1":"C","2":"A","3":"A","4":"G","5":"G","6":"controls","7":"242205"},{"1":"T","2":"A","3":"A","4":"G","5":"A","6":"singletons","7":"39546"},{"1":"T","2":"A","3":"A","4":"G","5":"A","6":"controls","7":"197730"},{"1":"G","2":"C","3":"A","4":"A","5":"G","6":"singletons","7":"25323"},{"1":"G","2":"C","3":"A","4":"A","5":"G","6":"controls","7":"126615"},{"1":"G","2":"T","3":"A","4":"G","5":"A","6":"singletons","7":"46909"},{"1":"G","2":"T","3":"A","4":"G","5":"A","6":"controls","7":"234545"},{"1":"T","2":"A","3":"A","4":"T","5":"T","6":"singletons","7":"77305"},{"1":"T","2":"A","3":"A","4":"T","5":"T","6":"controls","7":"386525"},{"1":"G","2":"T","3":"A","4":"T","5":"T","6":"singletons","7":"91212"},{"1":"G","2":"T","3":"A","4":"T","5":"T","6":"controls","7":"456060"},{"1":"T","2":"A","3":"A","4":"G","5":"C","6":"singletons","7":"17946"},{"1":"T","2":"A","3":"A","4":"G","5":"C","6":"controls","7":"89730"},{"1":"G","2":"C","3":"A","4":"C","5":"A","6":"singletons","7":"44455"},{"1":"G","2":"C","3":"A","4":"C","5":"A","6":"controls","7":"222275"},{"1":"G","2":"T","3":"A","4":"G","5":"C","6":"singletons","7":"25282"},{"1":"G","2":"T","3":"A","4":"G","5":"C","6":"controls","7":"126410"},{"1":"G","2":"C","3":"A","4":"T","5":"G","6":"singletons","7":"105496"},{"1":"G","2":"C","3":"A","4":"T","5":"G","6":"controls","7":"527480"},{"1":"G","2":"C","3":"A","4":"C","5":"C","6":"singletons","7":"26832"},{"1":"G","2":"C","3":"A","4":"C","5":"C","6":"controls","7":"134160"},{"1":"T","2":"A","3":"A","4":"C","5":"T","6":"singletons","7":"31497"},{"1":"T","2":"A","3":"A","4":"C","5":"T","6":"controls","7":"157485"},{"1":"G","2":"T","3":"A","4":"C","5":"T","6":"singletons","7":"31378"},{"1":"G","2":"T","3":"A","4":"C","5":"T","6":"controls","7":"156890"},{"1":"T","2":"A","3":"A","4":"G","5":"G","6":"singletons","7":"20110"},{"1":"T","2":"A","3":"A","4":"G","5":"G","6":"controls","7":"100550"},{"1":"A","2":"G","3":"A","4":"G","5":"T","6":"singletons","7":"47563"},{"1":"A","2":"G","3":"A","4":"G","5":"T","6":"controls","7":"237815"},{"1":"C","2":"G","3":"A","4":"A","5":"A","6":"singletons","7":"6279"},{"1":"C","2":"G","3":"A","4":"A","5":"A","6":"controls","7":"31395"},{"1":"G","2":"T","3":"A","4":"G","5":"G","6":"singletons","7":"27200"},{"1":"G","2":"T","3":"A","4":"G","5":"G","6":"controls","7":"136000"},{"1":"C","2":"G","3":"A","4":"A","5":"C","6":"singletons","7":"2180"},{"1":"C","2":"G","3":"A","4":"A","5":"C","6":"controls","7":"10900"},{"1":"G","2":"C","3":"A","4":"C","5":"G","6":"singletons","7":"8406"},{"1":"G","2":"C","3":"A","4":"C","5":"G","6":"controls","7":"42030"},{"1":"C","2":"G","3":"A","4":"T","5":"A","6":"singletons","7":"5814"},{"1":"C","2":"G","3":"A","4":"T","5":"A","6":"controls","7":"29070"},{"1":"C","2":"G","3":"A","4":"T","5":"C","6":"singletons","7":"5254"},{"1":"C","2":"G","3":"A","4":"T","5":"C","6":"controls","7":"26270"},{"1":"C","2":"G","3":"A","4":"A","5":"G","6":"singletons","7":"3081"},{"1":"C","2":"G","3":"A","4":"A","5":"G","6":"controls","7":"15405"},{"1":"T","2":"G","3":"A","4":"A","5":"A","6":"singletons","7":"62451"},{"1":"T","2":"G","3":"A","4":"A","5":"A","6":"controls","7":"312255"},{"1":"C","2":"A","3":"A","4":"G","5":"T","6":"singletons","7":"61824"},{"1":"C","2":"A","3":"A","4":"G","5":"T","6":"controls","7":"309120"},{"1":"C","2":"G","3":"A","4":"C","5":"A","6":"singletons","7":"5251"},{"1":"C","2":"G","3":"A","4":"C","5":"A","6":"controls","7":"26255"},{"1":"G","2":"C","3":"A","4":"A","5":"T","6":"singletons","7":"32206"},{"1":"G","2":"C","3":"A","4":"A","5":"T","6":"controls","7":"161030"},{"1":"T","2":"G","3":"A","4":"A","5":"C","6":"singletons","7":"19880"},{"1":"T","2":"G","3":"A","4":"A","5":"C","6":"controls","7":"99400"},{"1":"C","2":"G","3":"A","4":"C","5":"C","6":"singletons","7":"3060"},{"1":"C","2":"G","3":"A","4":"C","5":"C","6":"controls","7":"15300"},{"1":"C","2":"G","3":"A","4":"T","5":"G","6":"singletons","7":"6116"},{"1":"C","2":"G","3":"A","4":"T","5":"G","6":"controls","7":"30580"},{"1":"T","2":"G","3":"A","4":"T","5":"A","6":"singletons","7":"66246"},{"1":"T","2":"G","3":"A","4":"T","5":"A","6":"controls","7":"331230"},{"1":"G","2":"C","3":"A","4":"G","5":"A","6":"singletons","7":"50255"},{"1":"G","2":"C","3":"A","4":"G","5":"A","6":"controls","7":"251275"},{"1":"G","2":"C","3":"A","4":"T","5":"T","6":"singletons","7":"78889"},{"1":"G","2":"C","3":"A","4":"T","5":"T","6":"controls","7":"394445"},{"1":"T","2":"G","3":"A","4":"T","5":"C","6":"singletons","7":"35311"},{"1":"T","2":"G","3":"A","4":"T","5":"C","6":"controls","7":"176555"},{"1":"T","2":"G","3":"A","4":"A","5":"G","6":"singletons","7":"25663"},{"1":"T","2":"G","3":"A","4":"A","5":"G","6":"controls","7":"128315"},{"1":"G","2":"C","3":"A","4":"G","5":"C","6":"singletons","7":"30954"},{"1":"G","2":"C","3":"A","4":"G","5":"C","6":"controls","7":"154770"},{"1":"T","2":"A","3":"A","4":"G","5":"T","6":"singletons","7":"31093"},{"1":"T","2":"A","3":"A","4":"G","5":"T","6":"controls","7":"155465"},{"1":"C","2":"G","3":"A","4":"C","5":"G","6":"singletons","7":"1061"},{"1":"C","2":"G","3":"A","4":"C","5":"G","6":"controls","7":"5305"},{"1":"T","2":"G","3":"A","4":"C","5":"A","6":"singletons","7":"48822"},{"1":"T","2":"G","3":"A","4":"C","5":"A","6":"controls","7":"244110"},{"1":"A","2":"T","3":"A","4":"A","5":"A","6":"singletons","7":"124182"},{"1":"A","2":"T","3":"A","4":"A","5":"A","6":"controls","7":"620910"},{"1":"G","2":"T","3":"A","4":"G","5":"T","6":"singletons","7":"34293"},{"1":"G","2":"T","3":"A","4":"G","5":"T","6":"controls","7":"171465"},{"1":"A","2":"T","3":"A","4":"A","5":"C","6":"singletons","7":"25017"},{"1":"A","2":"T","3":"A","4":"A","5":"C","6":"controls","7":"125085"},{"1":"G","2":"C","3":"A","4":"C","5":"T","6":"singletons","7":"48195"},{"1":"G","2":"C","3":"A","4":"C","5":"T","6":"controls","7":"240975"},{"1":"T","2":"G","3":"A","4":"C","5":"C","6":"singletons","7":"26020"},{"1":"T","2":"G","3":"A","4":"C","5":"C","6":"controls","7":"130100"},{"1":"T","2":"G","3":"A","4":"T","5":"G","6":"singletons","7":"53172"},{"1":"T","2":"G","3":"A","4":"T","5":"G","6":"controls","7":"265860"},{"1":"G","2":"C","3":"A","4":"G","5":"G","6":"singletons","7":"50824"},{"1":"G","2":"C","3":"A","4":"G","5":"G","6":"controls","7":"254120"},{"1":"A","2":"T","3":"A","4":"T","5":"A","6":"singletons","7":"239238"},{"1":"A","2":"T","3":"A","4":"T","5":"A","6":"controls","7":"1196190"},{"1":"A","2":"T","3":"A","4":"T","5":"C","6":"singletons","7":"68223"},{"1":"A","2":"T","3":"A","4":"T","5":"C","6":"controls","7":"341115"},{"1":"T","2":"G","3":"A","4":"C","5":"G","6":"singletons","7":"4840"},{"1":"T","2":"G","3":"A","4":"C","5":"G","6":"controls","7":"24200"},{"1":"C","2":"G","3":"A","4":"A","5":"T","6":"singletons","7":"2767"},{"1":"C","2":"G","3":"A","4":"A","5":"T","6":"controls","7":"13835"},{"1":"A","2":"T","3":"A","4":"A","5":"G","6":"singletons","7":"41278"},{"1":"A","2":"T","3":"A","4":"A","5":"G","6":"controls","7":"206390"},{"1":"A","2":"T","3":"A","4":"C","5":"A","6":"singletons","7":"90232"},{"1":"A","2":"T","3":"A","4":"C","5":"A","6":"controls","7":"451160"},{"1":"N","2":"A","3":"A","4":"C","5":"C","6":"singletons","7":"1"},{"1":"N","2":"A","3":"A","4":"C","5":"C","6":"controls","7":"5"},{"1":"C","2":"G","3":"A","4":"G","5":"A","6":"singletons","7":"6907"},{"1":"C","2":"G","3":"A","4":"G","5":"A","6":"controls","7":"34535"},{"1":"C","2":"G","3":"A","4":"T","5":"T","6":"singletons","7":"5491"},{"1":"C","2":"G","3":"A","4":"T","5":"T","6":"controls","7":"27455"},{"1":"A","2":"T","3":"A","4":"C","5":"C","6":"singletons","7":"35444"},{"1":"A","2":"T","3":"A","4":"C","5":"C","6":"controls","7":"177220"},{"1":"A","2":"T","3":"A","4":"T","5":"G","6":"singletons","7":"117423"},{"1":"A","2":"T","3":"A","4":"T","5":"G","6":"controls","7":"587115"},{"1":"C","2":"G","3":"A","4":"G","5":"C","6":"singletons","7":"3153"},{"1":"C","2":"G","3":"A","4":"G","5":"C","6":"controls","7":"15765"},{"1":"T","2":"G","3":"A","4":"A","5":"T","6":"singletons","7":"30277"},{"1":"T","2":"G","3":"A","4":"A","5":"T","6":"controls","7":"151385"},{"1":"A","2":"T","3":"A","4":"C","5":"G","6":"singletons","7":"6566"},{"1":"A","2":"T","3":"A","4":"C","5":"G","6":"controls","7":"32830"},{"1":"C","2":"G","3":"A","4":"C","5":"T","6":"singletons","7":"3376"},{"1":"C","2":"G","3":"A","4":"C","5":"T","6":"controls","7":"16880"},{"1":"T","2":"G","3":"A","4":"G","5":"A","6":"singletons","7":"46677"},{"1":"T","2":"G","3":"A","4":"G","5":"A","6":"controls","7":"233385"},{"1":"C","2":"G","3":"A","4":"G","5":"G","6":"singletons","7":"5850"},{"1":"C","2":"G","3":"A","4":"G","5":"G","6":"controls","7":"29250"},{"1":"A","2":"C","3":"A","4":"A","5":"A","6":"singletons","7":"90612"},{"1":"A","2":"C","3":"A","4":"A","5":"A","6":"controls","7":"453060"},{"1":"T","2":"G","3":"A","4":"T","5":"T","6":"singletons","7":"51536"},{"1":"T","2":"G","3":"A","4":"T","5":"T","6":"controls","7":"257680"},{"1":"T","2":"G","3":"A","4":"G","5":"C","6":"singletons","7":"31317"},{"1":"T","2":"G","3":"A","4":"G","5":"C","6":"controls","7":"156585"},{"1":"G","2":"C","3":"A","4":"G","5":"T","6":"singletons","7":"56447"},{"1":"G","2":"C","3":"A","4":"G","5":"T","6":"controls","7":"282235"},{"1":"A","2":"C","3":"A","4":"A","5":"C","6":"singletons","7":"24368"},{"1":"A","2":"C","3":"A","4":"A","5":"C","6":"controls","7":"121840"},{"1":"G","2":"A","3":"A","4":"A","5":"A","6":"singletons","7":"73955"},{"1":"G","2":"A","3":"A","4":"A","5":"A","6":"controls","7":"369775"},{"1":"A","2":"C","3":"A","4":"T","5":"A","6":"singletons","7":"190803"},{"1":"A","2":"C","3":"A","4":"T","5":"A","6":"controls","7":"954015"},{"1":"A","2":"T","3":"A","4":"A","5":"T","6":"singletons","7":"64933"},{"1":"A","2":"T","3":"A","4":"A","5":"T","6":"controls","7":"324665"},{"1":"T","2":"G","3":"A","4":"C","5":"T","6":"singletons","7":"33682"},{"1":"T","2":"G","3":"A","4":"C","5":"T","6":"controls","7":"168410"},{"1":"G","2":"A","3":"A","4":"A","5":"C","6":"singletons","7":"21995"},{"1":"G","2":"A","3":"A","4":"A","5":"C","6":"controls","7":"109975"},{"1":"A","2":"C","3":"A","4":"T","5":"C","6":"singletons","7":"71762"},{"1":"A","2":"C","3":"A","4":"T","5":"C","6":"controls","7":"358810"},{"1":"T","2":"G","3":"A","4":"G","5":"G","6":"singletons","7":"32359"},{"1":"T","2":"G","3":"A","4":"G","5":"G","6":"controls","7":"161795"},{"1":"A","2":"C","3":"A","4":"A","5":"G","6":"singletons","7":"41239"},{"1":"A","2":"C","3":"A","4":"A","5":"G","6":"controls","7":"206195"},{"1":"A","2":"T","3":"A","4":"G","5":"A","6":"singletons","7":"58934"},{"1":"A","2":"T","3":"A","4":"G","5":"A","6":"controls","7":"294670"},{"1":"G","2":"A","3":"A","4":"T","5":"A","6":"singletons","7":"70366"},{"1":"G","2":"A","3":"A","4":"T","5":"A","6":"controls","7":"351830"},{"1":"A","2":"T","3":"A","4":"T","5":"T","6":"singletons","7":"142977"},{"1":"A","2":"T","3":"A","4":"T","5":"T","6":"controls","7":"714885"},{"1":"A","2":"C","3":"A","4":"C","5":"A","6":"singletons","7":"82635"},{"1":"A","2":"C","3":"A","4":"C","5":"A","6":"controls","7":"413175"},{"1":"A","2":"T","3":"A","4":"G","5":"C","6":"singletons","7":"27585"},{"1":"A","2":"T","3":"A","4":"G","5":"C","6":"controls","7":"137925"},{"1":"G","2":"A","3":"A","4":"T","5":"C","6":"singletons","7":"35127"},{"1":"G","2":"A","3":"A","4":"T","5":"C","6":"controls","7":"175635"},{"1":"C","2":"T","3":"A","4":"A","5":"A","6":"singletons","7":"92311"},{"1":"C","2":"T","3":"A","4":"A","5":"A","6":"controls","7":"461555"},{"1":"A","2":"C","3":"A","4":"C","5":"C","6":"singletons","7":"36755"},{"1":"A","2":"C","3":"A","4":"C","5":"C","6":"controls","7":"183775"},{"1":"G","2":"A","3":"A","4":"A","5":"G","6":"singletons","7":"38850"},{"1":"G","2":"A","3":"A","4":"A","5":"G","6":"controls","7":"194250"},{"1":"A","2":"C","3":"A","4":"T","5":"G","6":"singletons","7":"175635"},{"1":"A","2":"C","3":"A","4":"T","5":"G","6":"controls","7":"878175"},{"1":"G","2":"A","3":"A","4":"C","5":"A","6":"singletons","7":"53631"},{"1":"G","2":"A","3":"A","4":"C","5":"A","6":"controls","7":"268155"},{"1":"C","2":"T","3":"A","4":"A","5":"C","6":"singletons","7":"22356"},{"1":"C","2":"T","3":"A","4":"A","5":"C","6":"controls","7":"111780"},{"1":"A","2":"T","3":"A","4":"C","5":"T","6":"singletons","7":"59333"},{"1":"A","2":"T","3":"A","4":"C","5":"T","6":"controls","7":"296665"},{"1":"G","2":"A","3":"A","4":"C","5":"C","6":"singletons","7":"26381"},{"1":"G","2":"A","3":"A","4":"C","5":"C","6":"controls","7":"131905"},{"1":"A","2":"T","3":"A","4":"G","5":"G","6":"singletons","7":"32377"},{"1":"A","2":"T","3":"A","4":"G","5":"G","6":"controls","7":"161885"},{"1":"C","2":"T","3":"A","4":"T","5":"A","6":"singletons","7":"183161"},{"1":"C","2":"T","3":"A","4":"T","5":"A","6":"controls","7":"915805"},{"1":"G","2":"A","3":"A","4":"T","5":"G","6":"singletons","7":"59023"},{"1":"G","2":"A","3":"A","4":"T","5":"G","6":"controls","7":"295115"},{"1":"C","2":"G","3":"A","4":"G","5":"T","6":"singletons","7":"4536"},{"1":"C","2":"G","3":"A","4":"G","5":"T","6":"controls","7":"22680"},{"1":"A","2":"C","3":"A","4":"C","5":"G","6":"singletons","7":"9908"},{"1":"A","2":"C","3":"A","4":"C","5":"G","6":"controls","7":"49540"},{"1":"C","2":"T","3":"A","4":"T","5":"C","6":"singletons","7":"104849"},{"1":"C","2":"T","3":"A","4":"T","5":"C","6":"controls","7":"524245"},{"1":"C","2":"T","3":"A","4":"A","5":"G","6":"singletons","7":"36533"},{"1":"C","2":"T","3":"A","4":"A","5":"G","6":"controls","7":"182665"},{"1":"G","2":"A","3":"A","4":"C","5":"G","6":"singletons","7":"4652"},{"1":"G","2":"A","3":"A","4":"C","5":"G","6":"controls","7":"23260"},{"1":"C","2":"T","3":"A","4":"C","5":"A","6":"singletons","7":"80157"},{"1":"C","2":"T","3":"A","4":"C","5":"A","6":"controls","7":"400785"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

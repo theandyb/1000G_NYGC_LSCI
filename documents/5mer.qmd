@@ -1,0 +1,394 @@
+---
+title: "5-Mer Models"
+author: "Andy Beck"
+format: 
+   html:
+     df-print: paged
+editor: visual
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(tidyverse)
+library(fastglm)
+```
+
+## Introduction
+
+In this document we will take an in-depth look into modeling the influence of local sequence context within the +/- 2 bp window centered at a site of interest. In particular, we will be building models which include more than 1 or 2 positions and more thoroughly assess the influence of local sequence context.
+
+In order to proceed, we will:
+
+1.  Import the counts of 5-mers for both the singletons and controls
+2.  Sequentially build models from simple to more complex
+
+## Loading the data
+
+For both the singletons and controls, 21-mer motifs are available as the fourth column in subtype-specific csv files.
+
+```{r}
+#| label: define_load_functions
+load_singletons <- function(pop, subtype){
+  base_dir <- "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/"
+  f_name <- paste0(base_dir, pop, "/motifs/", subtype, ".csv")
+  awk_tmpl <- "awk -F, '{count[substr($4,9,5)]++}END{for(key in count)print(key\"\\t\"count[key])}' "
+  awk_cmd <- paste0(awk_tmpl, f_name)
+  df <- vroom::vroom(pipe(awk_cmd), col_names = c("motif", "singletons"), show_col_types = FALSE) %>%
+    separate(motif, into = c("p1", "p2", "p3", "p4", "p5"), sep=1:5)
+  return(df)
+}
+
+load_controls <- function(pop, subtype){
+  base_dir <- "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/"
+  f_name <- paste0(base_dir, pop, "/motifs/", subtype, ".csv")
+  awk_tmpl <- "awk -F, '{count[substr($4,9,5)]++}END{for(key in count)print(key\"\\t\"count[key])}' "
+  awk_cmd <- paste0(awk_tmpl, f_name)
+  df <- vroom::vroom(pipe(awk_cmd), col_names = c("motif", "controls"), show_col_types = FALSE) %>%
+    separate(motif, into = c("p1", "p2", "p3", "p4", "p5"), sep=1:5)
+  return(df)
+}
+
+load_data <- function(pop, subtype){
+  df <- load_singletons(pop, subtype) %>%
+    full_join(load_controls(pop, subtype), by = c("p1", "p2", "p3", "p4", "p5")) %>%
+    pivot_longer(!starts_with("p"), names_to = "status", values_to = "n") %>%
+    filter(p1 %in% c("A","C","G","T"),
+           p2 %in% c("A","C","G","T"),
+           p4 %in% c("A","C","G","T"),
+           p5 %in% c("A","C","G","T"))
+  return(df)
+}
+```
+
+## Fitting Models
+
+For our first foray, let's fit models for the A \> G subtype using the data from all 1KGP populations.
+
+```{r}
+#| label: load_a_g
+df <- load_data("ALL", "AT_GC")
+df
+```
+
+The models we fit will be of the form
+
+$$
+\log(n_{\textrm{base}_1,\ldots,\textrm{base}_j,\textrm{status}}) = \lambda_0 + \lambda_1^{\textrm{base}_1} + \ldots + \lambda_s^{status} + \sum_{\textrm{bases}}\lambda_{is}^{\textrm{base}\times\textrm{status}} + \ldots
+$$
+
+wherein we will vary which interaction parameters are included. The simplest model will have no interactions at all, in which case there is no dependence of nucleotide composition at the included position, nor is there any difference of the distributions of nucleotides at flanking positions between the singletons and the controls.
+
+As a first check, let's see if a model for one position returns the deviance statistic here as it did in my "one-at-a-time" model approach:
+
+```{r}
+mod_1 <- glm(n ~ status + p4, data = df, family = poisson)
+
+mod_1_i <- glm(n ~ status * p4, data = df, family = poisson)
+```
+
+### Controlling for central 3-mer
+
+#### NEW
+
+For our baseline model, we'll have all interactions among -1, +1, and status, as well as -2 interacting with status:
+
+```{r}
+mod_1 <- glm(n ~ (p2 * p4 * status) + p1 * status, data = df, family = poisson)
+```
+
+This model ignores any nucleotide interactions between -2 and (-1, +1). Let's add to this model the interactions between the nucleotides:
+
+```{r}
+mod_2 <- update(mod_1, . ~ . + p1*p2*p4)
+```
+
+We can now compute a test statistic for the null of their being no interaction between -2 and either of -1 and +1:
+
+```{r}
+anova(mod_1, mod_2, test = "LRT")
+```
+
+This is highly significant (and not really all that surprising). Now we might want to see if any of the two way interactions between -2 and -1 or 1 are significant (but we already know that this is the case from our two-position models!). Instead we'll look at whether or not the three-way interaction between the bases is shared between singletons and controls. First we'll add the two-way interactions:
+
+```{r}
+mod_3 <- update(mod_2, . ~ . + p1*p2*status + p1*p4*status )
+```
+
+and then we'll add the three way interaction:
+
+```{r}
+mod_4 <- update(mod_3, . ~ . + p1*p2*p4*status)
+```
+
+And now we get our test statistic:
+
+```{r}
+anova(mod_3, mod_4, test = "LRT")
+```
+
+Ok, now let's look at addressing questions along the lines of: what adds more information: an additional individual position, or a higher order interaction?
+
+The first model we'll fit here has all interactions for status, -1, and +1; -2 and status, and -2 with (-1, +1)
+
+```{r}
+mod_1 <- glm(n ~ (p2*p4*status) + p1 * status + (p1 * p2 * p4), data = df, family = poisson)
+```
+
+To this base model we'll add either:
+
+* An additional position by adding +2 and +2 * status (and interactions between all bases)
+* -2 * -1 * status interaction (and -2 * +1 * status?)
+
+```{r}
+mod_2_1 <- update(mod_1, . ~ . + p5*status + (p5*p1*p2*p4))
+mod_2_2 <- update(mod_1, . ~ . + p1 * p2 * status + p1 * p4 * status)
+```
+
+So, which of the above 2:
+
+1. Leads to the greatest reduction of deviance?
+2. Has the lowest AIC?
+
+```{r}
+anova(mod_1, mod_2_1, test="LRT")
+```
+
+```{r}
+anova(mod_1, mod_2_2, test="LRT")
+```
+
+And now: AIC
+
+```{r}
+AIC(mod_2_1)
+```
+
+```{r}
+AIC(mod_2_2)
+```
+
+```{r}
+mod_1 <- glm(n ~ (p2*p4*status) + p5 * status + (p5 * p2 * p4), data = df, family = poisson)
+mod_2_1 <- update(mod_1, . ~ . + p1 * status + (p1*p2*p4*p5))
+mod_2_2 <- update(mod_1, . ~ . + p5 * status * p2 + p5*status*p4 + p5*p4*p2*status )
+```
+
+```{r}
+AIC(mod_2_1)
+```
+
+```{r}
+AIC(mod_2_2)
+```
+
+
+#### OLD
+
+Here we'll evaluate the influence of the +/- 2 positions conditioning on the central 3-mer. To do so, we'll form our base model by including the +/- 1 positions and all interactions. 
+
+```{r}
+mod_3mer <- glm(n ~ status * p2 * p4, data = df, family = poisson)
+```
+
+To evaluate the effect of an individual additional position, we'll need to fit 2 more models: one in which just a term for that position is added, and another where we also indluce the nucleotide-by-status interaction as well.
+
+```{r}
+mod_3mer_m2 <- glm(n ~ (status * p2 * p4) + p1, data = df, family = poisson)
+mod_3mer_m2_f <- glm(n ~ (status * p2 * p4) + p1 + p1 * status, data = df, family = poisson)
+
+deviance(mod_3mer_m2) - deviance(mod_3mer_m2_f)
+```
+
+And now let's compare this to the deviance we would've seen for just the marginal effect of the nucleotide at the -2 position:
+
+```{r}
+df %>%
+  select(p1, n, status) %>%
+  group_by(status, p1) %>%
+  summarize(n = sum(n)) %>%
+  glm(n ~ status + p1, data = ., family = poisson) %>%
+  deviance()
+```
+Here let's model in a way that all interactions among nucleotides are accounted for, and the individual nucleotide distributions are allowed to differ between singletons and controls:
+
+```{r}
+mod_no_status <- glm(n ~ (p1 * p2 * p4 * p5) + status, data = df, family = poisson())
+mod_diff_indv <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5), data = df, family = poisson())
+
+deviance(mod_no_status) - deviance(mod_diff_indv)
+```
+And the individual nucleotide by status results:
+
+```{r}
+#-2
+mod_1_1 <- glm(n ~ (p1 * p2 * p4 * p5) + status + status*p1, data = df, family = poisson())
+deviance(mod_no_status) - deviance(mod_1_1)
+
+#-1
+mod_1_2 <- glm(n ~ (p1 * p2 * p4 * p5) + status + status*p2, data = df, family = poisson())
+deviance(mod_no_status) - deviance(mod_1_2)
+
+#1
+mod_1_3 <- glm(n ~ (p1 * p2 * p4 * p5) + status + status*p4, data = df, family = poisson())
+deviance(mod_no_status) - deviance(mod_1_3)
+
+#2
+mod_1_4 <- glm(n ~ (p1 * p2 * p4 * p5) + status + status*p5, data = df, family = poisson())
+deviance(mod_no_status) - deviance(mod_1_4)
+```
+
+
+Now we can continue on and compare models with and without distinct 2-way interactions:
+
+```{r}
+mod_2_int <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^2, data = df, family = poisson())
+
+deviance(mod_diff_indv) - deviance(mod_2_int)
+```
+And now, the individual 2 way effects:
+
+```{r}
+#-2,-1
+mod_2_1 <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5) + status * p1 * p2, data = df, family = poisson())
+deviance(mod_diff_indv) - deviance(mod_2_1)
+
+#-2, 1
+mod_2_2 <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5) + status * p1 * p4, data = df, family = poisson())
+deviance(mod_diff_indv) - deviance(mod_2_2)
+
+#-2, 2
+mod_2_3 <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5) + status * p1 * p5, data = df, family = poisson())
+deviance(mod_diff_indv) - deviance(mod_2_3)
+
+#-1, 1
+mod_2_4 <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5) + status * p2 * p4, data = df, family = poisson())
+deviance(mod_diff_indv) - deviance(mod_2_4)
+
+#-1, 2
+mod_2_5 <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5) + status * p2 * p5, data = df, family = poisson())
+deviance(mod_diff_indv) - deviance(mod_2_5)
+
+#1, 2
+mod_2_6 <- glm(n ~ (p1 * p2 * p4 * p5) + status * (p1+p2+p4+p5) + status * p4 * p5, data = df, family = poisson())
+deviance(mod_diff_indv) - deviance(mod_2_6)
+```
+
+
+Let's take a look at three-ways!
+
+```{r}
+mod_3_int <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^3, data = df, family = poisson())
+deviance(mod_2_int) - deviance(mod_3_int)
+```
+
+We can further break this down into the individual 3-way interactions (as opposed to testing all at once):
+
+```{r}
+# -2, -1, 1
+
+mod_3_1 <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^2 + status*p1*p2*p4, data = df, family = poisson())
+
+deviance(mod_2_int) - deviance(mod_3_1)
+
+# -2, -1, 2
+
+mod_3_2 <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^2 + status*p1*p2*p5, data = df, family = poisson())
+
+deviance(mod_2_int) - deviance(mod_3_2)
+
+#-2, 1, 2
+mod_3_3 <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^2 + status*p1*p4*p5, data = df, family = poisson())
+
+deviance(mod_2_int) - deviance(mod_3_3)
+
+#-1, 1, 2 
+mod_3_4 <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^2 + status*p2*p4*p5, data = df, family = poisson())
+
+deviance(mod_2_int) - deviance(mod_3_4)
+```
+
+
+
+And just to verify that 4-way is overly saturated:
+
+```{r}
+mod_4_int <- glm(n ~ (p1 * p2 * p4 * p5) + (status * (p1+p2+p4+p5))^4, data = df, family = poisson())
+mod_4_int2 <- glm(n ~ (p1 * p2 * p4 * p5 * status), data = df, family = poisson())
+deviance(mod_3_int) - deviance(mod_4_int)
+deviance(mod_4_int)
+deviance(mod_4_int2)
+```
+
+## 9-mers
+
+Ok, the name of this document is a lie, but let's re-do the above analyses, but let's also load in 9-mer motifs (why not?)
+
+```{r}
+#| label: re_define_load_functions
+load_singletons9 <- function(pop, subtype){
+  base_dir <- "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/"
+  f_name <- paste0(base_dir, pop, "/motifs/", subtype, ".csv")
+  awk_tmpl <- "awk -F, '{count[substr($4,7,9)]++}END{for(key in count)print(key\"\\t\"count[key])}' "
+  awk_cmd <- paste0(awk_tmpl, f_name)
+  df <- vroom::vroom(pipe(awk_cmd), col_names = c("motif", "singletons"), show_col_types = FALSE) %>%
+    separate(motif, into = c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9"), sep=1:9)
+  return(df)
+}
+
+load_controls9 <- function(pop, subtype){
+  base_dir <- "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/"
+  f_name <- paste0(base_dir, pop, "/motifs/", subtype, ".csv")
+  awk_tmpl <- "awk -F, '{count[substr($4,7,9)]++}END{for(key in count)print(key\"\\t\"count[key])}' "
+  awk_cmd <- paste0(awk_tmpl, f_name)
+  df <- vroom::vroom(pipe(awk_cmd), col_names = c("motif", "controls"), show_col_types = FALSE) %>%
+    separate(motif, into = c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9"), sep=1:9)
+  return(df)
+}
+
+load_data9 <- function(pop, subtype){
+  df <- load_singletons9(pop, subtype) %>%
+    full_join(load_controls9(pop, subtype), 
+              by = c("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9")) %>%
+    pivot_longer(!starts_with("p"), names_to = "status", values_to = "n") %>%
+    filter(p1 %in% c("A","C","G","T"),
+           p2 %in% c("A","C","G","T"),
+           p3 %in% c("A","C","G","T"),
+           p4 %in% c("A","C","G","T"),
+           p5 %in% c("A","C","G","T"),
+           p6 %in% c("A","C","G","T"),
+           p7 %in% c("A","C","G","T"), 
+           p8 %in% c("A","C","G","T"),
+           p9 %in% c("A","C","G","T")) %>%
+    replace_na(list(n = 0))
+  return(df)
+}
+```
+
+Okie-dokey, let's take a looksy at the A to G subtype once again:
+
+```{r}
+df <- load_data9("ALL", "AT_GC")
+```
+
+I wanna look at a histogram to see how "populated" these categories are:
+
+```{r}
+df %>%
+  filter(status == "singletons") %>%
+  filter(n < 5000) %>%
+  ggplot(aes(x = n)) + 
+  geom_density()
+```
+
+Well, something is weird, but screw it, let's get to model building:
+
+```{r}
+x <- model.matrix(~ (p3 * p4 * p6 * p7) + (p1 * p2) + (p8 * p9) + status, data = df)
+y <- df$n
+mod_no_status <- fastglm(x,y, 
+                     data = df, 
+                     family = poisson)
+```
+
