@@ -4,3 +4,5 @@ output/*
 .Rhistory
 src/slurm/*
 .Rproj.user/*
+.Rproj.user
+*.Rds

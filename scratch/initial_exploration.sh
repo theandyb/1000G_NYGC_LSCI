@@ -44,6 +44,18 @@ python sample_control.py -s ../output/singletons/SAS/cpg_GC_AT.txt -f ../data/ma
 python sample_control.py -s ../output/singletons/SAS/cpg_GC_TA.txt -f ../data/mask_ref.fa -o ../output/controls/SAS/cpg_GC_TA.csv -t "cpg_GC_TA" -n 5
 python sample_control.py -s ../output/singletons/AMR/cpg_GC_CG.txt -f ../data/mask_ref.fa -o ../output/controls/AMR/cpg_GC_CG.csv -t "cpg_GC_CG" -n 5
 
+
+#### GC_ subtypes redo 24 May
+pop="SAS"
+python sample_control.py -s ../output/singletons/${pop}/GC_AT.txt -f ../data/mask_ref.fa -o ../output/controls/${pop}/GC_AT.csv -t "GC_AT" -n 5
+python sample_control.py -s ../output/singletons/${pop}/GC_TA.txt -f ../data/mask_ref.fa -o ../output/controls/${pop}/GC_TA.csv -t "GC_TA" -n 5
+python sample_control.py -s ../output/singletons/${pop}/GC_CG.txt -f ../data/mask_ref.fa -o ../output/controls/${pop}/GC_CG.csv -t "GC_CG" -n 5
+
+python sample_control.py -s ../output/singletons/${pop}/cpg_GC_AT.txt -f ../data/mask_ref.fa -o ../output/controls/${pop}/cpg_GC_AT.csv -t "cpg_GC_AT" -n 5
+python sample_control.py -s ../output/singletons/${pop}/cpg_GC_TA.txt -f ../data/mask_ref.fa -o ../output/controls/${pop}/cpg_GC_TA.csv -t "cpg_GC_TA" -n 5
+python sample_control.py -s ../output/singletons/${pop}/cpg_GC_CG.txt -f ../data/mask_ref.fa -o ../output/controls/${pop}/cpg_GC_CG.csv -t "cpg_GC_CG" -n 5
+
+
 # ALL file generation
 
 #################################################
@@ -59,6 +71,18 @@ cat EUR/${sub}.txt >> ${sub}.txt
 sort -k1,1V -k2,2n ${sub}.txt > ALL/${sub}.txt
 #################################################
 
+#### GENERATE all_GC files
+sub="GC_TA"
+cat "${sub}.txt" >> "all_${sub}.txt.tmp"
+cat "cpg_${sub}.txt" >> "all_${sub}.txt.tmp"
+sort -k1,1V -k2,2n "all_${sub}.txt.tmp" > "all_${sub}.txt"
+rm "all_${sub}.txt.tmp"
+
+## Sample controls
+python sample_control.py -s ../output/singletons/SAS/all_GC_AT.txt -f ../data/mask_ref.fa -o ../output/controls/SAS/all_GC_AT.csv -t "all_GC_AT" -n 5
+python sample_control.py -s ../output/singletons/SAS/all_GC_TA.txt -f ../data/mask_ref.fa -o ../output/controls/SAS/all_GC_TA.csv -t "all_GC_TA" -n 5
+python sample_control.py -s ../output/singletons/SAS/all_GC_CG.txt -f ../data/mask_ref.fa -o ../output/controls/SAS/all_GC_CG.csv -t "all_GC_CG" -n 5
+
 #################################################
 ## Paste control files into one
 sub="cpg_GC_CG"
@@ -70,6 +94,28 @@ cat SAS/${sub}.csv >> ${sub}.csv
 
 ## Ensure proper sorting
 sort -k1,1V -k2,2n ${sub}.csv > ALL/${sub}.csv
+
+## Paste min control files into one
+sub="cpg_GC_CG"
+cat AFR/${sub}.csv.min >> ${sub}.csv.min
+cat AMR/${sub}.csv.min >> ${sub}.csv.min
+cat EAS/${sub}.csv.min >> ${sub}.csv.min
+cat EUR/${sub}.csv.min >> ${sub}.csv.min
+cat SAS/${sub}.csv.min >> ${sub}.csv.min
+
+## Ensure proper sorting
+sort -k1,1V -k2,2n ${sub}.csv.min > ALL/${sub}.csv.min
+
+## Paste max control files into one
+sub="cpg_GC_CG"
+cat AFR/${sub}.csv.max >> ${sub}.csv.max
+cat AMR/${sub}.csv.max >> ${sub}.csv.max
+cat EAS/${sub}.csv.max >> ${sub}.csv.max
+cat EUR/${sub}.csv.max >> ${sub}.csv.max
+cat SAS/${sub}.csv.max >> ${sub}.csv.max
+
+## Ensure proper sorting
+sort -k1,1V -k2,2n ${sub}.csv.max > ALL/${sub}.csv.max
 #################################################
 
 # pos_files
@@ -82,7 +128,7 @@ awk '{if($1=="chr'$i'" && $3 == "T")print($2)}' $sub.txt > pos_files/${sub}_rev_
 done
 
 # GC version
-sub="GC_AT"
+sub="all_GC_CG"
 for i in `seq 1 22`; do
 echo $i
 awk '{if($1=="chr'$i'" && $3 == "C")print($2)}' $sub.txt > pos_files/${sub}_${i}.txt
@@ -91,18 +137,51 @@ done
 
 
 ## controls
-sub="AT_TA"
+sub="AT_CG"
 for i in `seq 1 22`; do
 echo $i
 awk -F, '{if($1=="chr'$i'" && $4 == "A")print($7)}' $sub.csv > pos_files/${sub}_${i}.txt
 awk -F, '{if($1=="chr'$i'" && $4 == "T")print($7)}' $sub.csv > pos_files/${sub}_rev_${i}.txt
 done
+
 # GC version
-sub="cpg_GC_CG"
+sub="all_GC_CG"
 for i in `seq 1 22`; do
 echo $i
 awk -F, '{if($1=="chr'$i'" && $4 == "C")print($7)}' $sub.csv > pos_files/${sub}_${i}.txt
 awk -F, '{if($1=="chr'$i'" && $4 == "G")print($7)}' $sub.csv > pos_files/${sub}_rev_${i}.txt
+done
+
+## min/max
+sub="AT_CG"
+for i in `seq 1 22`; do
+echo $i
+awk -F, '{if($1=="chr'$i'" && $4 == "A")print($7)}' $sub.csv.min > pos_files/${sub}_${i}.txt.min
+awk -F, '{if($1=="chr'$i'" && $4 == "T")print($7)}' $sub.csv.min > pos_files/${sub}_rev_${i}.txt.min
+done
+
+# GC version
+sub="cpg_GC_CG"
+for i in `seq 1 22`; do
+echo $i
+awk -F, '{if($1=="chr'$i'" && $4 == "C")print($7)}' $sub.csv.min > pos_files/${sub}_${i}.txt.min
+awk -F, '{if($1=="chr'$i'" && $4 == "G")print($7)}' $sub.csv.min > pos_files/${sub}_rev_${i}.txt.min
+done
+
+## /max
+sub="AT_TA"
+for i in `seq 1 22`; do
+echo $i
+awk -F, '{if($1=="chr'$i'" && $4 == "A")print($7)}' $sub.csv.max > pos_files/${sub}_${i}.txt.max
+awk -F, '{if($1=="chr'$i'" && $4 == "T")print($7)}' $sub.csv.max > pos_files/${sub}_rev_${i}.txt.max
+done
+
+# GC version
+sub="cpg_GC_CG"
+for i in `seq 1 22`; do
+echo $i
+awk -F, '{if($1=="chr'$i'" && $4 == "C")print($7)}' $sub.csv.max > pos_files/${sub}_${i}.txt.max
+awk -F, '{if($1=="chr'$i'" && $4 == "G")print($7)}' $sub.csv.max > pos_files/${sub}_rev_${i}.txt.max
 done
 
 

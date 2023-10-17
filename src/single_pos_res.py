@@ -10,14 +10,14 @@ import ray
 
 def c_pos(subtype, chromosome, pop = "ALL"):
   """Get the positions for controls for a given subtype"""
-  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/SAS/pos_files/"
+  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/" + pop + "/pos_files/"
   f_name = input_dir + subtype + "_" + str(chromosome) + ".txt"
   pos_list = pd.read_csv(f_name, header=None, names = ['pos'], usecols=['pos']).squeeze("columns")
   return pos_list
 
 def s_pos(subtype, chromosome, pop = "ALL"):
   """Get the positions for singletons for a given subtype"""
-  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/SAS/pos_files/"
+  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/" + pop +"/pos_files/"
   f_name = input_dir + subtype + "_" + str(chromosome) + ".txt"
   pos_list = pd.read_csv(f_name, header=None, names = ['pos'], usecols=['pos']).squeeze("columns")
   return pos_list
@@ -90,10 +90,10 @@ def get_count_all(subtype, offset, status = "singleton", pop = "ALL"):
   across all 22 autosomes. This version is parallelized via ray
   """
   if status == "singleton":
-    futures = [get_count_table_singletons.remote(i, subtype, offset) for i in range(1,23)]
+    futures = [get_count_table_singletons.remote(i, subtype, offset, pop = pop) for i in range(1,23)]
     results = pd.DataFrame.from_dict(ray.get(futures)).sum(axis=0)
   else:
-    futures = [get_count_table_control.remote(i, subtype, offset) for i in range(1,23)]
+    futures = [get_count_table_control.remote(i, subtype, offset, pop = pop) for i in range(1,23)]
     results = pd.DataFrame.from_dict(ray.get(futures)).sum(axis=0)
   return(results)
 
@@ -112,7 +112,7 @@ def fit_model_all(subtype, offset, pop = "ALL"):
   return(df)
 
 ray.init(num_cpus=22)
-subtype = "cpg_GC_CG"
+subtype = "all_GC_CG"
 pop = "SAS"
 out_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/single_pos/resid/{}/".format(pop)
 print("Running models for subtype: {} and population: {}".format(subtype, pop))

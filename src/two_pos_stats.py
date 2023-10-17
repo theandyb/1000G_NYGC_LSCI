@@ -129,7 +129,7 @@ def fit_model_all(subtype, p, q, pop = "ALL"):
 
 ray.init(num_cpus=22)
 results = []
-pop = "SAS"
+pop = "ALL"
 subtype = "cpg_GC_CG"
 print("Running models for subtype: {} in population: {}".format(subtype, pop))
 

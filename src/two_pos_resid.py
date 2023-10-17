@@ -128,8 +128,8 @@ def fit_model_all(subtype, p, q, pop = "ALL"):
   return df
 
 ray.init(num_cpus=22)
-pop = "SAS"
-subtype = "cpg_GC_CG"
+pop = "EUR"
+subtype = "GC_AT"
 out_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/two_pos/resid/{}/".format(pop)
 
 print("Running models for subtype: {} in population: {}".format(subtype, pop))

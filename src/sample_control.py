@@ -19,8 +19,13 @@ def main(ref_prefix = "chr"):
   subtype = args.subtype
   if(subtype[0:3]=="cpg"):
     cpg_bool = True
+    all_bool = False
+  elif(subtype[0:3]=="all"):
+    all_bool = True
+    cpg_bool = False
   else:
     cpg_bool = False
+    all_bool = False
   current_chrom = 1
   output_list = []
   out_file = args.output
@@ -43,7 +48,7 @@ def main(ref_prefix = "chr"):
         current_chrom = chrom
         seq = fasta_obj["{}{}".format(ref_prefix, current_chrom)]
         seqstr = seq[0:len(seq)].seq
-      new_entry = sample_control("chr{}".format(current_chrom), pos, ref, nSample, seqstr, cpg_bool = cpg_bool)
+      new_entry = sample_control("chr{}".format(current_chrom), pos, ref, nSample, seqstr, cpg_bool = cpg_bool, all_bool = all_bool)
       output_list.extend(new_entry)
       min_dist = min([t.get("distance") for t in new_entry])
       max_dist = max([t.get("distance") for t in new_entry])
@@ -71,16 +76,16 @@ def main(ref_prefix = "chr"):
     pd.DataFrame(max_list).to_csv(max_file, index = None, header=False, mode='a')
   return 0
 
-def sample_control(chrom, pos, ref, nSample, seqstr, cpg_bool = False, window=150, bp=10):
+def sample_control(chrom, pos, ref, nSample, seqstr, cpg_bool = False, all_bool = False, window=150, bp=10):
   sites = []
   newlist = []
   off = 0
   if cpg_bool:
     search_str = "CG"
   else:
-    if ref[0:2] == "GC" and ref == "C":
+    if ref == "C" and all_bool == False:
       search_str = "C[ATC]"
-    elif ref[0:2] == "GC" and ref == "G":
+    elif ref == "G" and all_bool == False:
       search_str = "[AGT]G"
       off = 1
     else:
