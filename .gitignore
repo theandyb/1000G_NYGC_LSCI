@@ -6,4 +6,5 @@ src/slurm/*
 .Rproj.user/*
 .Rproj.user
 *.Rds
+scratch/sigprofiler/*
 scratch/slurm/*
