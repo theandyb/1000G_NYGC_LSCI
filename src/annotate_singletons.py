@@ -54,7 +54,7 @@ with open(singleton_file) as fp:
     line = fp.readline()
     cnt = 1
     while line:
-        data = line.strip().split("\t") # CHROM, POS, REF
+        data = line.strip().split("\t") # CHROM, POS, REF, ALT
         chrom = data[0]
         pos = int(data[1])
         ref = data[2]

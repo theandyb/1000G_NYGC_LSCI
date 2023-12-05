@@ -104,20 +104,26 @@ def fit_model_all(subtype, offset, pop = "ALL", suffix = ""):
   c_tab = get_count_all(subtype, offset, status = "control", pop = pop, suffix = suffix)
   c_tab = c_tab.reset_index(level=0)
   c_tab.columns = ['nuc', 'controls']
-  df = pd.DataFrame.merge(s_tab, c_tab, on='nuc')
-  df = pd.melt(df, id_vars = 'nuc', var_name = 'status', value_name = "n")
+  df2 = pd.DataFrame.merge(s_tab, c_tab, on='nuc')
+  df = pd.melt(df2, id_vars = 'nuc', var_name = 'status', value_name = "n")
   mod = smf.glm("n ~ status + nuc", df, family = sm.families.Poisson()).fit()
   n_s = sum(s_tab.singletons)
   n_c = sum(c_tab.controls)
-  return {"dev":mod.deviance, "singletons":n_s, "controls":n_c, "offset":offset}
+  df2['p'] = df2['singletons'] / df2['singletons'].sum()
+  df2['q'] = df2['controls'] / df2['controls'].sum()
+  df2['tv'] = abs(df2['p'] - df2['q'])
+  tot_var = df2['tv'].sum()
+  max_d = round(df2['tv'].max(),5)
+  mean_var = df2['tv'].mean()
+  return {"dev":mod.deviance, "singletons":n_s, "controls":n_c, "offset":offset, "tot_var":tot_var,"mean_var": mean_var ,"max_var": max_d}
 
 ray.init(num_cpus=22)
 results = []
-pop = "SAS"
-subtype = "all_GC_CG"
-suffix = ""
+pop = "ALL"
+subtype = "GC_TA"
+suffix = ".max"
 print("Running models for subtype: {} in population: {}".format(subtype, pop))
-for offset in range(1, 501):
+for offset in range(1, 1001):
   print(offset)
   results.append(fit_model_all(subtype, offset * -1, pop = pop, suffix = suffix))
   if subtype.startswith("cpg") and offset == 1:

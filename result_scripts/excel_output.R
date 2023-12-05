@@ -13,7 +13,7 @@ result_dir <- "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/sing
 
 # example
 df <- read_csv("output/single_pos/ALL/AT_CG.csv")
-df %>% arrange(offset)
+df %>% arrange(offset) %>% print()
 
 # Get all subtypes for ALL
 res_list <- vector("list", length(subtypes))

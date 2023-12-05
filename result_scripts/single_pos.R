@@ -1,7 +1,7 @@
 # Single-position result figures
 
 library(tidyverse)
-library(sjPlot)
+#library(sjPlot)
 
 
 base_dir <- "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/single_pos/"
@@ -76,10 +76,17 @@ plot_st_pop_res <- function(dir, st, pop, re = TRUE, max_d = 1000){
   return(g_obj)
 }
 
-### Example
-plot_st_pop_res(base_dir, "AT_GC", "ALL", max_d = 10)
+pop <- "ALL"
+plot_st_pop_res(base_dir, "AT_CG", pop, max_d = 10)
+plot_st_pop_res(base_dir, "AT_GC", pop, max_d = 10)
+plot_st_pop_res(base_dir, "AT_TA", pop, max_d = 10)
+plot_st_pop_res(base_dir, "GC_AT", pop, max_d = 10)
+plot_st_pop_res(base_dir, "GC_TA", pop, max_d = 10)
+plot_st_pop_res(base_dir, "GC_CG", pop, max_d = 10)
+plot_st_pop_res(base_dir, "cpg_GC_AT", pop, max_d = 10)
+plot_st_pop_res(base_dir, "cpg_GC_TA", pop, max_d = 10)
+plot_st_pop_res(base_dir, "cpg_GC_CG", pop, max_d = 10)
 
-magick::image_read_svg("mtcars.svg")
 #####
 ##### GENERATE ALL SINGLE SUBTYPE PLOTS: STATISTIC AT EACH POSITION
 #####
@@ -127,9 +134,16 @@ plot_st_pop_dev <- function(dir, st, pop, max_d = 1000, crit_val = qchisq(0.95, 
 }
 
 ###
-### EXAMPLE
-###
-plot_st_pop_dev(base_dir, "AT_GC", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significance\\nChi Sq")
+pop <- "ALL"
+plot_st_pop_dev(base_dir, "AT_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "AT_GC", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "AT_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "GC_AT", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "GC_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "GC_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "cpg_GC_AT", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "cpg_GC_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "cpg_GC_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
 
 #' Load position-level results for subtype across all populations
 #'
@@ -288,7 +302,7 @@ plot_st_pop_resid <- function(dir, st, pop, rp){
 #### Paper plots
 
 #### Single subtype plots with significance colored in
-plot_st_pop_dev(base_dir, "AT_GC", "ALL", re=FALSE) + scale_y_log10()
+plot_st_pop_dev(base_dir, "AT_GC", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significance\nChi Sq")
 
 #### All sub-types within a given population
 df <- load_all_st_pop(base_dir, "ALL", max_d = 10)
@@ -299,7 +313,7 @@ df <- df %>%
          re = dev / (2 * (singletons + controls))) %>%
   mutate(st2 = subtype_text(type))
 
-# Original sphaghetti plot
+# Original spaghetti plot
 df %>%
   filter(from == "A") %>%
   ggplot(aes(x = offset, y = dev, color = st2)) +
@@ -325,6 +339,15 @@ df %>%
   labs(color = "Subtype") +
   scale_y_log10() +
   theme_andy()
+
+# Grid arrangement
+df %>%
+  ggplot(aes(x = offset, y = re, group = type)) + geom_point() + geom_line() +
+  facet_grid(rows = vars(to), cols = vars(from)) +
+  ggtitle("Marginal Influence of Individual Positions") +
+  xlab("Relative Position") +
+  ylab("Relative Entropy") +
+  theme_bw()
 
 df %>%
   filter(from == "A") %>%
