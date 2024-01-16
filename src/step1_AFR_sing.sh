@@ -8,8 +8,8 @@
 #SBATCH --job-name=singAFR
 #SBATCH --array=1-22
 #SBATCH --requeue
-#SBATCH -e slurm/singleton_afr-%J.err
-#SBATCH -o slurm/singleton_afr-%J.out
+#SBATCH -e slurm/singleton_afr-%A_%a.err
+#SBATCH -o slurm/singleton_afr-%A_%a.out
 
 VCF_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/data/"
 OUT_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/AFR/"

@@ -8,8 +8,8 @@
 #SBATCH --job-name=singEUR
 #SBATCH --array=1-22
 #SBATCH --requeue
-#SBATCH -e slurm/singleton_eur-%J.err
-#SBATCH -o slurm/singleton_eur-%J.out
+#SBATCH -e slurm/singleton_eur-%A_%a.err
+#SBATCH -o slurm/singleton_eur-%A_%a.out
 
 VCF_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/data/"
 OUT_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/EUR/"

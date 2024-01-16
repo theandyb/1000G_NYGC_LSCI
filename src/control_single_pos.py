@@ -10,14 +10,14 @@ import ray
 
 def c_pos(subtype, chromosome, pop = "ALL", suffix = ""):
   """Get the positions for controls for a given subtype"""
-  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/{}/pos_files/".format(pop)
+  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/{}/control_control/pos_files/".format(pop)
   f_name = input_dir + subtype + "_" + str(chromosome) + ".txt" + suffix
   pos_list = pd.read_csv(f_name, header=None, names = ['pos'], usecols=['pos']).squeeze("columns")
   return pos_list
 
 def s_pos(subtype, chromosome, pop = "ALL"):
   """Get the positions for singletons for a given subtype"""
-  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/{}/pos_files/".format(pop)
+  input_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/controls/{}/control_control/pos_files/".format(pop)
   f_name = input_dir + subtype + "_" + str(chromosome) + ".txt"
   pos_list = pd.read_csv(f_name, header=None, names = ['pos'], usecols=['pos']).squeeze("columns")
   return pos_list
@@ -39,10 +39,10 @@ def get_count_table_control(chromosome, subtype, offset, pop = "ALL", suffix = "
   """
   ref_file = "/net/snowwhite/home/beckandy/research/1000G_LSCI/reference_data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"
   fasta_obj = Fasta(ref_file)
-  control_pos = c_pos(subtype, chromosome, pop, suffix = suffix)
-  rev_control_pos = c_pos(subtype + "_rev", chromosome, pop, suffix = suffix)
+  control_pos = c_pos(subtype + "_1", chromosome, pop, suffix = suffix)
+  rev_control_pos = c_pos(subtype + "_1_rev", chromosome, pop, suffix = suffix)
   seq = fasta_obj["{}{}".format("chr", chromosome)]
-  # seqstr = seq[0:len(seq)].seq
+  seqstr = seq[0:len(seq)].seq
   results = {"A":0, "C":0, "G":0, "T":0}
   for index, value in control_pos.items():
     ix = value - 1 + offset
@@ -65,8 +65,8 @@ def get_count_table_singletons(chromosome, subtype, offset, pop = "ALL"):
   check if there's a python library that has the reference genome as on object
   that can maybe be passed around?
   """
-  singleton_pos = s_pos(subtype, chromosome, pop)
-  rev_singleton_pos = s_pos(subtype + "_rev", chromosome, pop)
+  singleton_pos = s_pos(subtype + "_2", chromosome, pop)
+  rev_singleton_pos = s_pos(subtype + "_2_rev", chromosome, pop)
   ref_file = "/net/snowwhite/home/beckandy/research/1000G_LSCI/reference_data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna"
   fasta_obj = Fasta(ref_file)
   seq = fasta_obj["{}{}".format("chr", chromosome)]
@@ -114,14 +114,13 @@ def fit_model_all(subtype, offset, pop = "ALL", suffix = ""):
   df2['tv'] = abs(df2['p'] - df2['q'])
   tot_var = df2['tv'].sum()
   max_d = round(df2['tv'].max(),5)
-  mean_var = df2['tv'].mean()
-  return {"dev":mod.deviance, "singletons":n_s, "controls":n_c, "offset":offset, "tot_var":tot_var,"mean_var": mean_var ,"max_var": max_d}
+  return {"dev":mod.deviance, "singletons":n_s, "controls":n_c, "offset":offset, "tot_var":tot_var, "max_var": max_d}
 
 ray.init(num_cpus=22)
 results = []
 pop = "ALL"
-subtype = "GC_TA"
-suffix = ".max"
+subtype = "cpg_GC_CG"
+suffix = ""
 print("Running models for subtype: {} in population: {}".format(subtype, pop))
 for offset in range(1, 1001):
   print(offset)
@@ -133,7 +132,7 @@ for offset in range(1, 1001):
 ray.shutdown()
   
 final = pd.DataFrame.from_dict(results)
-out_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/single_pos/{}/".format(pop)
+out_dir = "/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/single_pos/all_controls/"
 file_name = out_dir + subtype + ".csv" + suffix
 final.to_csv(file_name, index = False)
 

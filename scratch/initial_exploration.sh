@@ -128,7 +128,7 @@ awk '{if($1=="chr'$i'" && $3 == "T")print($2)}' $sub.txt > pos_files/${sub}_rev_
 done
 
 # GC version
-sub="all_GC_CG"
+sub="GC_AT"
 for i in `seq 1 22`; do
 echo $i
 awk '{if($1=="chr'$i'" && $3 == "C")print($2)}' $sub.txt > pos_files/${sub}_${i}.txt
@@ -184,4 +184,55 @@ awk -F, '{if($1=="chr'$i'" && $4 == "C")print($7)}' $sub.csv.max > pos_files/${s
 awk -F, '{if($1=="chr'$i'" && $4 == "G")print($7)}' $sub.csv.max > pos_files/${sub}_rev_${i}.txt.max
 done
 
+################ 8 Nov 2023 ######################
+# GC content
+wget https://hgdownload.cse.ucsc.edu/goldenpath/hg38/bigZips/hg38.chrom.sizes
+bedtools makewindows -g hg38.chrom.sizes -w 10000 | grep -Ev "_|X|Y|M" | sort -k 1,1 -k2,2n > genome.10kb.sorted.bed
+bedtools nuc -fi GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -bed genome.10kb.sorted.bed > gc10kb.bed
+
+### From output/singletons/ALL directory
+sub="AT_GC"
+awk '{print($1"\t"$2-51"\t"$2+49)}' ${sub}.txt > gc_content/${sub}50.bed
+bedtools nuc -fi ../../../data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -bed gc_content/${sub}50.bed > gc_content/${sub}50_cont.bed
+
+## From output/controls/ALL (or AFR, AMR, ..., SAS) directory
+suffix=""
+sub="GC_CG"
+awk -F, '{print($1"\t"$7-6"\t"$7+4)}' ${sub}.csv${suffix} > gc_content/${sub}5.bed${suffix}
+bedtools nuc -fi ../../../data/GCA_000001405.15_GRCh38_no_alt_analysis_set.fna -bed gc_content/${sub}5.bed${suffix} > gc_content/${sub}5_cont.bed${suffix}
+
+#################################################
+# COntrol-control approach
+subtype="cpg_GC_CG"
+awk 'NR % 5 == 1' ${subtype}.csv > control_control/${subtype}_1.csv
+awk 'NR % 5 == 2' ${subtype}.csv > control_control/${subtype}_2.csv
+
+# from control_control
+subtype="cpg_GC_CG"
+awk 'NR % 2 == 1' ${subtype}_1.csv > ${subtype}_1_1.csv
+awk 'NR % 2 == 0' ${subtype}_1.csv > ${subtype}_1_2.csv
+awk 'NR % 2 == 0' ${subtype}_2.csv > ${subtype}_2_1.csv
+awk 'NR % 2 == 1' ${subtype}_2.csv > ${subtype}_2_2.csv
+rm ${subtype}_2.csv ${subtype}_1.csv
+cat ${subtype}_2_1.csv ${subtype}_1_1.csv | sort -k1,1V -k2,2n > ${subtype}_1.csv
+cat ${subtype}_2_2.csv ${subtype}_1_2.csv | sort -k1,1V -k2,2n > ${subtype}_2.csv
+rm ${subtype}_2_1.csv ${subtype}_1_1.csv ${subtype}_2_2.csv ${subtype}_1_2.csv
+
+sub="AT_TA"
+for i in `seq 1 22`; do
+echo $i
+awk -F, '{if($1=="chr'$i'" && $4 == "A")print($7)}' ${sub}_1.csv > pos_files/${sub}_1_${i}.txt
+awk -F, '{if($1=="chr'$i'" && $4 == "T")print($7)}' ${sub}_1.csv > pos_files/${sub}_1_rev_${i}.txt
+awk -F, '{if($1=="chr'$i'" && $4 == "A")print($7)}' ${sub}_2.csv > pos_files/${sub}_2_${i}.txt
+awk -F, '{if($1=="chr'$i'" && $4 == "T")print($7)}' ${sub}_2.csv > pos_files/${sub}_2_rev_${i}.txt
+done
+
+sub="cpg_GC_CG"
+for i in `seq 1 22`; do
+echo $i
+awk -F, '{if($1=="chr'$i'" && $4 == "C")print($7)}' ${sub}_1.csv > pos_files/${sub}_1_${i}.txt
+awk -F, '{if($1=="chr'$i'" && $4 == "G")print($7)}' ${sub}_1.csv > pos_files/${sub}_1_rev_${i}.txt
+awk -F, '{if($1=="chr'$i'" && $4 == "C")print($7)}' ${sub}_2.csv > pos_files/${sub}_2_${i}.txt
+awk -F, '{if($1=="chr'$i'" && $4 == "G")print($7)}' ${sub}_2.csv > pos_files/${sub}_2_rev_${i}.txt
+done
 

@@ -8,8 +8,8 @@
 #SBATCH --job-name=singEAS
 #SBATCH --array=1-22
 #SBATCH --requeue
-#SBATCH -e slurm/singleton_eas-%J.err
-#SBATCH -o slurm/singleton_eas-%J.out
+#SBATCH -e slurm/singleton_eas-%A_%a.err
+#SBATCH -o slurm/singleton_eas-%A_%a.out
 
 VCF_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/data/"
 OUT_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/EAS/"

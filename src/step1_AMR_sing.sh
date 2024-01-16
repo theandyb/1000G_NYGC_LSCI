@@ -8,8 +8,8 @@
 #SBATCH --job-name=singAMR
 #SBATCH --array=1-22
 #SBATCH --requeue
-#SBATCH -e slurm/singleton_amr-%J.err
-#SBATCH -o slurm/singleton_amr-%J.out
+#SBATCH -e slurm/singleton_amr-%A_%a.err
+#SBATCH -o slurm/singleton_amr-%A_%a.out
 
 VCF_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/data/"
 OUT_DIR="/net/snowwhite/home/beckandy/research/1000G_NYGC_LSCI/output/singletons/AMR/"

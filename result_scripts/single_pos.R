@@ -135,15 +135,15 @@ plot_st_pop_dev <- function(dir, st, pop, max_d = 1000, crit_val = qchisq(0.95, 
 
 ###
 pop <- "ALL"
-plot_st_pop_dev(base_dir, "AT_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "AT_GC", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "AT_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "GC_AT", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "GC_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "GC_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "cpg_GC_AT", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "cpg_GC_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
-plot_st_pop_dev(base_dir, "cpg_GC_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq")
+plot_st_pop_dev(base_dir, "AT_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "AT_GC", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "AT_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "GC_AT", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "GC_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "GC_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "cpg_GC_AT", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "cpg_GC_TA", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
+plot_st_pop_dev(base_dir, "cpg_GC_CG", "ALL", re=FALSE) + scale_y_log10() + theme_andy() + labs(color = "Significant\nChi Sq") + ylab("Log10 Deviance")
 
 #' Load position-level results for subtype across all populations
 #'

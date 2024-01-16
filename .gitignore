@@ -8,3 +8,7 @@ src/slurm/*
 *.Rds
 scratch/sigprofiler/*
 scratch/slurm/*
+*.csv*
+*.tsv*
+*.txt*
+*.ipynb
